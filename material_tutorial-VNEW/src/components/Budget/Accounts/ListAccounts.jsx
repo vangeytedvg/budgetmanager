@@ -141,7 +141,7 @@ const ListAccounts = (props) => {
             <Grid item xs={12} md={6} lg={4}>
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
-                <CardContent>Hello World</CardContent>
+                <CardContent>€{account.balance}</CardContent>
                 <CardActions>
                   <IconButton color="secondary">
                     <ArrowForwardIcon />

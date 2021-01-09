@@ -22,7 +22,7 @@ import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 
 /**
- * Styling
+ * Styling the component
  */
 const useStyles = makeStyles((theme) => ({
   root: {

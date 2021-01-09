@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { CurrentISODate } from "../../../utils";
 import InputMask from "react-input-mask";
 import TextError from "../../UI_Utils/TextError";
+import ListAccounts from "./ListAccounts";
 
 /**
  * Styling
@@ -169,6 +170,7 @@ const Accounts = () => {
           </Button>
         </form>
       </Paper>
+      <ListAccounts />
     </div>
   );
 };

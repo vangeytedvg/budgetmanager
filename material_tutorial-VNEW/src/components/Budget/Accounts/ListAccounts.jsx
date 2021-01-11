@@ -17,9 +17,10 @@ import {
   Avatar,
   IconButton,
 } from "@material-ui/core";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import EditIcon from "@material-ui/icons/Edit";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
+import AccountModal from "./AccountModal";
 
 /**
  * Styling the component
@@ -52,13 +53,8 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
     alignItems: "center",
   },
-  blabla: {
-    padding: "18px",
-    borderRadius: "5px",
-    backgroundColor: "#535353",
-    borderBlockStyle: "none",
-    color: "white",
-    fontFamily: "Roboto",
+  button: {
+    marginBottom: "10px",
   },
 }));
 
@@ -71,10 +67,15 @@ const ListAccounts = (props) => {
   const [bank, setBank] = useState("");
   const [balance, setBalance] = useState(0);
   const [idToDelete, setIdToDelete] = useState(0);
+  const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
   const classes = useStyles();
   // Get the current user
 
   const { currentUser, logout } = useAuth();
+
+  const handleNewAccount = () => {
+    setShowNewInvoiceModal(true);
+  };
 
   const deleteAccount = () => {
     // setShowMessageToDelete(false);
@@ -131,6 +132,14 @@ const ListAccounts = (props) => {
         maintitle="Lijst rekeningen"
         subtitle="algemeen overzicht"
       />
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
+        onClick={handleNewAccount}
+      >
+        Nieuwe rekening
+      </Button>
       <Grid
         container
         spacing={4}
@@ -144,7 +153,7 @@ const ListAccounts = (props) => {
                 <CardContent>€{account.balance}</CardContent>
                 <CardActions>
                   <IconButton color="secondary">
-                    <ArrowForwardIcon />
+                    <EditIcon />
                   </IconButton>
                 </CardActions>
               </Card>
@@ -152,6 +161,10 @@ const ListAccounts = (props) => {
           );
         })}
       </Grid>
+      <AccountModal
+        open={showNewInvoiceModal}
+        setOpen={setShowNewInvoiceModal}
+      />
     </div>
   );
 };

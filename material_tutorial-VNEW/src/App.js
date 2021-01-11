@@ -27,6 +27,7 @@ import ForgotPassword from "./Context/ForgotPassword";
 import UpdateProfile from "./Context/UpdateProfile";
 import { AuthProvider } from "./Context/AuthContext";
 import PrivateRoute from "./Context/PrivateRoute";
+import ListAccounts from "./components/Budget/Accounts/ListAccounts";
 
 const useStyles = makeStyles({
   container: {
@@ -65,7 +66,7 @@ function App() {
           <ClippedDrawer />
           <Switch>
             <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute path="/accounts" component={Accounts} />
+            <PrivateRoute path="/accounts" component={ListAccounts} />
             <PrivateRoute path="/expenses" component={Expenses} />
             <PrivateRoute path="/income" component={Income} />
             <PrivateRoute path="/incomeoverview" component={IncomeOverview} />

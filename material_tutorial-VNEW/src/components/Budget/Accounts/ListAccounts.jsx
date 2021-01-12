@@ -68,12 +68,30 @@ const ListAccounts = (props) => {
   const [balance, setBalance] = useState(0);
   const [idToDelete, setIdToDelete] = useState(0);
   const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
+
+  const [initialValues, setInitialValues] = useState({
+    date_created: CurrentISODate(),
+    userid: 0, //currentUser.uid,
+    accountOwnerName: "",
+    accountNr: "",
+    accountBankName: "",
+    accountCurrentBalance: "",
+  });
+
   const classes = useStyles();
   // Get the current user
 
   const { currentUser, logout } = useAuth();
 
   const handleNewAccount = () => {
+    setInitialValues({
+      date_created: CurrentISODate(),
+      userid: 0, //currentUser.uid,
+      accountOwnerName: "Danny Van Geyte",
+      accountNr: "",
+      accountBankName: "",
+      accountCurrentBalance: "",
+    });
     setShowNewInvoiceModal(true);
   };
 
@@ -163,6 +181,7 @@ const ListAccounts = (props) => {
       </Grid>
       <AccountModal
         open={showNewInvoiceModal}
+        oldValues={initialValues}
         setOpen={setShowNewInvoiceModal}
       />
     </div>

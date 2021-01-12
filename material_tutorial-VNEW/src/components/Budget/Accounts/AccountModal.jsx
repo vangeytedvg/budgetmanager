@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, Grid, Paper, TextField } from "@material-ui/core";
+import { Button, Grid, TextField } from "@material-ui/core";
+
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import IbanField from "../../UI_Utils/IbanField";
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -9,15 +15,12 @@ import TextError from "../../UI_Utils/TextError";
 import { useFormik } from "formik";
 import { CurrentISODate } from "../../../utils";
 
-export default function AccountModal({ open, setOpen }) {
-  const initialValues = {
-    date_created: CurrentISODate(),
-    userid: 0, //currentUser.uid,
-    accountOwnerName: "",
-    accountNr: "",
-    accountBankName: "",
-    accountCurrentBalance: "",
-  };
+export default function AccountModal({ open, setOpen, oldValues }) {
+  console.log(oldValues);
+
+  //const initialValues = oldValues;
+  OLD VALUES NOT RECOVERED!!!
+  const initialValues = oldValues;
 
   const validate = (values) => {
     // Validation rules
@@ -48,6 +51,9 @@ export default function AccountModal({ open, setOpen }) {
     handleClose();
   };
 
+  /**
+   * Formik hook
+   */
   const formik = useFormik({
     initialValues,
     onSubmit,
@@ -80,7 +86,6 @@ export default function AccountModal({ open, setOpen }) {
                   helperText="Eignaar van de rekening"
                   onChange={formik.handleChange}
                   value={formik.values.accountOwnerName}
-                  variant="outlined"
                 />
                 {formik.errors.accountOwnerName && (
                   <TextError error={formik.errors.accountOwnerName} />
@@ -94,22 +99,24 @@ export default function AccountModal({ open, setOpen }) {
                   helperText="Naam van de bank"
                   onChange={formik.handleChange}
                   value={formik.values.accountBankName}
-                  variant="outlined"
                 />
                 {formik.errors.accountBankName && (
                   <TextError error={formik.errors.accountBankName} />
                 )}
               </Grid>
               <Grid item>
-                <TextField
-                  id="accountNr"
-                  name="accountNr"
-                  label="Rekening nummer"
-                  helperText="Rekening nummer (IBAN)"
-                  onChange={formik.handleChange}
-                  value={formik.values.accountNr}
-                  variant="outlined"
-                />
+                <FormControl>
+                  <InputLabel htmlFor="formatted-text-mask-input">
+                    IBAN nr
+                  </InputLabel>
+                  <Input
+                    value={formik.values.accountNr}
+                    onChange={formik.handleChange}
+                    name="accountNr"
+                    id="accountNr"
+                    inputComponent={IbanField}
+                  />
+                </FormControl>
                 {formik.errors.accountNr && (
                   <TextError error={formik.errors.accountNr} />
                 )}
@@ -123,7 +130,6 @@ export default function AccountModal({ open, setOpen }) {
                   helperText="Bedrag op de rekening"
                   onChange={formik.handleChange}
                   value={formik.values.accountCurrentBalance}
-                  variant="outlined"
                 />
                 {formik.errors.accountCurrentBalance && (
                   <TextError error={formik.errors.accountCurrentBalance} />

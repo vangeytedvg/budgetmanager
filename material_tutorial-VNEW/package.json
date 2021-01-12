@@ -21,6 +21,7 @@
     "react-scripts": "4.0.1",
     "react-text-mask": "^5.4.3",
     "string-mask": "^0.3.0",
+    "text-mask-addon-iban": "0.0.3",
     "web-vitals": "^0.2.4",
     "yup": "^0.32.8"
   },

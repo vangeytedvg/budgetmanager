@@ -6,6 +6,10 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import IbanField from "../../UI_Utils/IbanField";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import EuroIcon from "@material-ui/icons/Euro";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -18,7 +22,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { CurrentISODate } from "../../../utils";
 import * as Yup from "yup";
 
-export default function AccountModal({ open, setOpen, initialValues }) {
+export default function AccountModal({
+  open,
+  setOpen,
+  initialValues,
+  idToWorkOn,
+}) {
   /**
    * The Validation schema for this form
    */
@@ -65,10 +74,14 @@ export default function AccountModal({ open, setOpen, initialValues }) {
         >
           {({ submitForm, isSubmitting }) => (
             <Form>
-              <DialogTitle id="form-dialog-title">Nieuwe rekening</DialogTitle>
+              <DialogTitle id="form-dialog-title">
+                {idToWorkOn
+                  ? "Bestaande rekening aanpassen"
+                  : "Nieuwe rekening"}
+              </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  Voer de gegevens in voor een nieuwe rekening
+                  Gegevens voor deze rekening
                 </DialogContentText>
                 <Grid container spacing={2}>
                   <Grid item sm={12} md={4} lg={6}>
@@ -77,6 +90,13 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       id="accountOwnerName"
                       name="accountOwnerName"
                       helperText="Eignaar van de rekening"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AccountCircle />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item sm={12} md={4} lg={6}>
@@ -85,6 +105,13 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       id="accountBankName"
                       name="accountBankName"
                       helperText="Naam van de bank"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <AccountBalanceIcon />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item sm={12} md={4} lg={6}>
@@ -104,6 +131,13 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       name="accountCurrentBalance"
                       type="number"
                       helperText="Bedrag op de rekening"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <EuroIcon />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                 </Grid>

@@ -92,6 +92,7 @@ const ListAccounts = (props) => {
       accountBankName: "",
       accountCurrentBalance: "",
     });
+    setIdToWorkOn(0);
     setShowNewInvoiceModal(true);
   };
 
@@ -186,11 +187,15 @@ const ListAccounts = (props) => {
             <Grid item xs={12} md={6} lg={6}>
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
-                <CardContent>€{account.balance}</CardContent>
+                <CardContent>
+                  <Typography color="secondary" variant="h4">
+                    €{account.balance}
+                  </Typography>
+                </CardContent>
                 <CardActions>
                   <IconButton
                     onClick={() => handleEditAccount(account.id)}
-                    color="secondary"
+                    color="primary"
                   >
                     <EditIcon />
                   </IconButton>
@@ -204,6 +209,7 @@ const ListAccounts = (props) => {
         open={showNewInvoiceModal}
         initialValues={initialValues}
         setOpen={setShowNewInvoiceModal}
+        idToWorkOn={idToWorkOn}
       />
     </div>
   );

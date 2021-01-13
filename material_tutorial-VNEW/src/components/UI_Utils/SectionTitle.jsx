@@ -16,7 +16,7 @@ const SectionTitle = ({ maintitle, subtitle }) => {
 
   return (
     <>
-      <Typography variant="h3">{maintitle}</Typography>
+      <Typography variant="h4">{maintitle}</Typography>
       <Typography color="secondary" variant="subtitle1">
         {subtitle}
       </Typography>

@@ -111,7 +111,7 @@ const Home = () => {
             </CardActions>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6} lg="4">
+        <Grid item xs={12} md={6} lg={4}>
           <Card className={classes.root} raised>
             <CardHeader title="Agenda" subheader="(0) taken" />
             <CardContent>
@@ -128,7 +128,7 @@ const Home = () => {
             </CardActions>
           </Card>
         </Grid>
-        <Grid item xs={12} md={6} lg="4">
+        <Grid item xs={12} md={6} lg={4}>
           <Card className={classes.root} raised>
             <CardHeader title="Fakturen" subheader="openstaande facturen" />
             <CardContent>

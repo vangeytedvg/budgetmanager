@@ -3,7 +3,6 @@
  * Contains all functions for updating data
  * in the firestore.
  */
-import React from "react";
 import { db } from "../firebase";
 
 /**
@@ -11,19 +10,10 @@ import { db } from "../firebase";
  * @param {object containing account details} values
  */
 export const UpdateAccount = async (values, idToWorkOn) => {
-  await db
-    .collection("accounts")
-    .doc(idToWorkOn)
-    .update({
-      owner: values.accountOwnerName,
-      accountnr: values.accountNr,
-      bank: values.accountBankName,
-      balance: values.accountCurrentBalance,
-    })
-    .then(() => {
-      return;
-    })
-    .catch((err) => {
-      return alert(err);
-    });
+  db.collection("accounts").doc(idToWorkOn).update({
+    owner: values.accountOwnerName,
+    accountnr: values.accountNr,
+    bank: values.accountBankName,
+    balance: values.accountCurrentBalance,
+  });
 };

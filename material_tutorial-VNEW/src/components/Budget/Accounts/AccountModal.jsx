@@ -21,7 +21,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { Field, Form, Formik } from "formik";
 
 import { CurrentISODate } from "../../../utils";
-import { UpdateAccount } from "../../../database/CRUD/Updates";
+import { db } from "../../../database/firebase";
 
 export default function AccountModal({
   open,
@@ -53,7 +53,20 @@ export default function AccountModal({
    */
   const onSubmit = (values, { resetForm }) => {
     if (idToWorkOn) {
-      UpdateAccount(values, idToWorkOn);
+      db.collection("accountser")
+        .doc(idToWorkOn)
+        .update({
+          owner: values.accountOwnerName,
+          accountnr: values.accountNr,
+          bank: values.accountBankName,
+          balance: values.accountCurrentBalance,
+        })
+        .then(() => {
+          alert("Ok");
+        })
+        .catch((err) => {
+          alert(err);
+        });
     } else {
       alert("NEW " + JSON.stringify(values));
     }

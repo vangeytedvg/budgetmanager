@@ -5,12 +5,10 @@ import { CssBaseline } from "@material-ui/core";
 import App from "./App";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <CssBaseline />
-      <App />
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <CssBaseline />
+    <App />
+  </Router>,
   document.getElementById("root")
 );
 

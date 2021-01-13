@@ -17,6 +17,7 @@ import {
   Avatar,
   IconButton,
 } from "@material-ui/core";
+import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
@@ -41,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
   },
-  crumb: {
-    color: "#1d5f43",
+  balance: {
+    color: "#b8dd24",
   },
   pageContent: {
     marginTop: "15px",
@@ -188,8 +189,16 @@ const ListAccounts = (props) => {
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>
-                  <Typography color="secondary" variant="h4">
-                    €{account.balance}
+                  <Typography variant="h6">{account.accountnr}</Typography>
+                  <Typography className={classes.balance} variant="h4">
+                    <CountUp
+                      start={0}
+                      end={account.balance}
+                      duration={1.5}
+                      decimals={2}
+                      separator=","
+                      prefix="€"
+                    />
                   </Typography>
                 </CardContent>
                 <CardActions>

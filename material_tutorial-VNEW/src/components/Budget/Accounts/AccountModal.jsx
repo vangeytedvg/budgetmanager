@@ -5,6 +5,7 @@ import { TextField } from "formik-material-ui";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import * as Yup from "yup";
 import IbanField from "../../UI_Utils/IbanField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -17,11 +18,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextError from "../../UI_Utils/TextError";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 
 import { CurrentISODate } from "../../../utils";
-import * as Yup from "yup";
+import { UpdateAccount } from "../../../database/CRUD/Updates";
 
 export default function AccountModal({
   open,
@@ -52,7 +52,11 @@ export default function AccountModal({
    * @param {} values
    */
   const onSubmit = (values, { resetForm }) => {
-    alert(JSON.stringify(values));
+    if (idToWorkOn) {
+      UpdateAccount(values, idToWorkOn);
+    } else {
+      alert("NEW " + JSON.stringify(values));
+    }
     resetForm({});
     handleClose();
   };

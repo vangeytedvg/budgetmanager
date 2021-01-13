@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginBottom: "15px",
   },
+  createaccount: {
+    color: "yellow",
+  },
 }));
 
 export default function Signup() {
@@ -173,7 +176,10 @@ export default function Signup() {
                     Maak account
                   </Button>
                   <div>
-                    Wel al een account? <Link to="/login">Inloggen</Link>
+                    Wel al een account?{" "}
+                    <Link className={classes.createaccount} to="/login">
+                      Inloggen
+                    </Link>
                   </div>
                 </CardActions>
               </form>

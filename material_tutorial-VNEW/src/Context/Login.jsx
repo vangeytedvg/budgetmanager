@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   alerter: {
     marginBottom: "15px",
   },
+  createaccount: {
+    color: "yellow",
+  },
   circleSpacer: {
     marginLeft: "20px",
   },
@@ -130,7 +133,10 @@ export default function Login() {
                     Log In
                   </Button>
                   <div>
-                    Nog geen account? <Link to="/signup">Account maken</Link>
+                    Nog geen account?{" "}
+                    <Link className={classes.createaccount} to="/signup">
+                      Account maken
+                    </Link>
                   </div>
                 </CardActions>
               </form>

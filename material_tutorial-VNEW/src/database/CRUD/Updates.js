@@ -1,3 +1,8 @@
+/**
+ * Updates.js
+ * Contains all functions for updating data
+ * in the firestore.
+ */
 import React from "react";
 import { db } from "../firebase";
 

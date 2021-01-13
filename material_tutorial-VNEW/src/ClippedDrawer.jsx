@@ -10,14 +10,15 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ViewListTwoToneIcon from "@material-ui/icons/ViewListTwoTone";
 import ListAltTwoToneIcon from "@material-ui/icons/ListAltTwoTone";
 import DescriptionTwoToneIcon from "@material-ui/icons/DescriptionTwoTone";
 import EuroIcon from "@material-ui/icons/Euro";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DateRangeTwoToneIcon from "@material-ui/icons/DateRangeTwoTone";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ReceiptIcon from "@material-ui/icons/Receipt";
@@ -247,7 +248,8 @@ const ClippedDrawer = (props) => {
               <div className={classes.currentUser}>{getCurrentUser()}</div>
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
+                endIcon={<ExitToAppIcon />}
                 onClick={handleLogout}
               >
                 Logout

@@ -19,10 +19,6 @@ import { CurrentISODate } from "../../../utils";
 import * as Yup from "yup";
 
 export default function AccountModal({ open, setOpen, initialValues }) {
-  //const initialValues = oldValues;
-  //let initialValues = oldValues;
-  console.log("Initial Values", initialValues);
-
   /**
    * The Validation schema for this form
    */
@@ -75,7 +71,7 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                   Voer de gegevens in voor een nieuwe rekening
                 </DialogContentText>
                 <Grid container spacing={2}>
-                  <Grid item>
+                  <Grid item sm={12} md={4} lg={6}>
                     <Field
                       component={TextField}
                       id="accountOwnerName"
@@ -83,7 +79,7 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       helperText="Eignaar van de rekening"
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item sm={12} md={4} lg={6}>
                     <Field
                       component={TextField}
                       id="accountBankName"
@@ -91,7 +87,7 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       helperText="Naam van de bank"
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item sm={12} md={4} lg={6}>
                     {/* Using the iban field with InputProps */}
                     <Field
                       component={TextField}
@@ -101,7 +97,7 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       InputProps={{ inputComponent: IbanField }}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item sm={12} md={4} lg={6}>
                     <Field
                       component={TextField}
                       id="accountCurrentBalance"

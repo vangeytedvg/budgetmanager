@@ -66,7 +66,7 @@ const ListAccounts = (props) => {
   const [accountNr, setAccountNr] = useState("");
   const [bank, setBank] = useState("");
   const [balance, setBalance] = useState(0);
-  const [idToDelete, setIdToDelete] = useState(0);
+  const [idToWorkOn, setIdToWorkOn] = useState(0);
   const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
@@ -95,11 +95,29 @@ const ListAccounts = (props) => {
     setShowNewInvoiceModal(true);
   };
 
+  const handleEditAccount = (id) => {
+    // Not needed to go to firestore again, we have the data already,
+    // so filter it out from the accounts array
+    let currentAccount = accounts.filter((accounts) => accounts.id === id);
+    console.log("Gevonden ", currentAccount[0]);
+    setInitialValues({
+      date_created: CurrentISODate(),
+      userid: currentUser.uid,
+      accountOwnerName: currentAccount[0].owner,
+      accountNr: currentAccount[0].accountnr,
+      accountBankName: currentAccount[0].bank,
+      accountCurrentBalance: currentAccount[0].balance,
+    });
+    console.log("Werd doorgegeven: ", initialValues);
+    setIdToWorkOn(id);
+    setShowNewInvoiceModal(true);
+  };
+
   const deleteAccount = () => {
     // setShowMessageToDelete(false);
     // const id = e.id
     db.collection("accounts")
-      .doc(idToDelete)
+      .doc(idToWorkOn)
       .delete()
       .then(() => {
         // return toast("Record deleted", {
@@ -165,12 +183,15 @@ const ListAccounts = (props) => {
       >
         {accounts.map((account, key) => {
           return (
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>€{account.balance}</CardContent>
                 <CardActions>
-                  <IconButton color="secondary">
+                  <IconButton
+                    onClick={() => handleEditAccount(account.id)}
+                    color="secondary"
+                  >
                     <EditIcon />
                   </IconButton>
                 </CardActions>

@@ -86,11 +86,11 @@ const ListAccounts = (props) => {
   const handleNewAccount = () => {
     setInitialValues({
       date_created: CurrentISODate(),
-      userid: 0, //currentUser.uid,
-      accountOwnerName: "Danny Van Geyte",
-      accountNr: "BE111",
-      accountBankName: "ING",
-      accountCurrentBalance: "5",
+      userid: currentUser.uid,
+      accountOwnerName: "",
+      accountNr: "",
+      accountBankName: "",
+      accountCurrentBalance: "",
     });
     setShowNewInvoiceModal(true);
   };

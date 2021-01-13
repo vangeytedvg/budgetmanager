@@ -27,12 +27,18 @@ export default function AccountModal({ open, setOpen, initialValues }) {
    * The Validation schema for this form
    */
   const validationSchema = Yup.object({
-    accountOwnerName: Yup.string().max(40, "Maximum 40").required("Required!"),
+    accountOwnerName: Yup.string()
+      .max(40, "Maximum 40")
+      .required("Naam is verplicht!"),
     accountCurrentBalance: Yup.number()
-      .min(0, "Must be zero or higher")
-      .required("Balance required"),
-    accountNr: Yup.string().required("Account nr is required"),
-    accountBankName: Yup.string().required("Bank name is required!"),
+      .min(0, "Kan niet negatief zijn")
+      .required("Stand rekening verplicht"),
+    accountNr: Yup.string()
+      // Replace all non digits and check if the lenght is 14
+      .transform((value) => value.replace(/[^\d]/g, ""))
+      .min(14, "Geen correct rekening nummer")
+      .required("Rekening nummer verplicht"),
+    accountBankName: Yup.string().required("Naam van de bank verplicht"),
   });
 
   /**
@@ -76,10 +82,6 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       name="accountOwnerName"
                       helperText="Eignaar van de rekening"
                     />
-                    <ErrorMessage
-                      name="accountOwnerName"
-                      component={TextError}
-                    />
                   </Grid>
                   <Grid item>
                     <Field
@@ -88,12 +90,9 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       name="accountBankName"
                       helperText="Naam van de bank"
                     />
-                    <ErrorMessage
-                      name="accountBankName"
-                      component={TextError}
-                    />
                   </Grid>
                   <Grid item>
+                    {/* Using the iban field with InputProps */}
                     <Field
                       component={TextField}
                       name="accountNr"
@@ -101,7 +100,6 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       helperText="Rekening Nr"
                       InputProps={{ inputComponent: IbanField }}
                     />
-                    <ErrorMessage name="accountNr" component={TextError} />
                   </Grid>
                   <Grid item>
                     <Field
@@ -110,10 +108,6 @@ export default function AccountModal({ open, setOpen, initialValues }) {
                       name="accountCurrentBalance"
                       type="number"
                       helperText="Bedrag op de rekening"
-                    />
-                    <ErrorMessage
-                      name="accountCurrentBalance"
-                      component={TextError}
                     />
                   </Grid>
                 </Grid>

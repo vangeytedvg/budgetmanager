@@ -28,7 +28,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { useAuth } from "./Context/AuthContext";
-
+import denkatech from "./images/denkatech.png";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -102,6 +102,10 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  logo: {
+    width: "170px",
+    height: "50px",
   },
   currentUser: {
     marginRight: "15px",
@@ -268,7 +272,9 @@ const ClippedDrawer = (props) => {
         }}
       >
         <div className={classes.toolbar}>
-          <div>DenkaTech</div>
+          <div>
+            <img className={classes.logo} src={denkatech} alt="logo" />
+          </div>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />

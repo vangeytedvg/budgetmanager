@@ -10,6 +10,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import EuroIcon from "@material-ui/icons/Euro";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -121,7 +122,14 @@ export default function AccountModal({
                       name="accountNr"
                       id="accountNr"
                       helperText="Rekening Nr"
-                      InputProps={{ inputComponent: IbanField }}
+                      InputProps={{
+                        inputComponent: IbanField,
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <CreditCardIcon />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                   <Grid item sm={12} md={4} lg={6}>

@@ -13,15 +13,7 @@ const IbanField = (props) => {
   const { inputRef, ...other } = props;
 
   return (
-    <MaskedInput
-      {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={ibanMask}
-      placeholderChar={"_"}
-      showMask
-    />
+    <MaskedInput {...other} mask={ibanMask} placeholderChar={"_"} showMask />
   );
 };
 

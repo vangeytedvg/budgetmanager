@@ -88,9 +88,9 @@ const ListAccounts = (props) => {
       date_created: CurrentISODate(),
       userid: 0, //currentUser.uid,
       accountOwnerName: "Danny Van Geyte",
-      accountNr: "",
-      accountBankName: "",
-      accountCurrentBalance: "",
+      accountNr: "BE111",
+      accountBankName: "ING",
+      accountCurrentBalance: "5",
     });
     setShowNewInvoiceModal(true);
   };
@@ -181,7 +181,7 @@ const ListAccounts = (props) => {
       </Grid>
       <AccountModal
         open={showNewInvoiceModal}
-        oldValues={initialValues}
+        initialValues={initialValues}
         setOpen={setShowNewInvoiceModal}
       />
     </div>

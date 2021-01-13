@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Grid, TextField } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
+import { TextField } from "formik-material-ui";
 
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -12,34 +13,27 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextError from "../../UI_Utils/TextError";
-import { useFormik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+
 import { CurrentISODate } from "../../../utils";
+import * as Yup from "yup";
 
-export default function AccountModal({ open, setOpen, oldValues }) {
-  console.log(oldValues);
-
+export default function AccountModal({ open, setOpen, initialValues }) {
   //const initialValues = oldValues;
-  OLD VALUES NOT RECOVERED!!!
-  const initialValues = oldValues;
+  //let initialValues = oldValues;
+  console.log("Initial Values", initialValues);
 
-  const validate = (values) => {
-    // Validation rules
-    let errors = {};
-    if (!values.accountOwnerName) {
-      errors.accountOwnerName = "Naam verplicht!";
-    }
-    if (!values.accountBankName) {
-      errors.accountBankName = "Banknaam verplicht!";
-    }
-    if (!values.accountNr) {
-      errors.accountNr = "Rekeningnummer verplicht";
-    }
-    if (!values.accountCurrentBalance) {
-      errors.accountCurrentBalance = "Balans verplicht";
-    }
-
-    return errors;
-  };
+  /**
+   * The Validation schema for this form
+   */
+  const validationSchema = Yup.object({
+    accountOwnerName: Yup.string().max(40, "Maximum 40").required("Required!"),
+    accountCurrentBalance: Yup.number()
+      .min(0, "Must be zero or higher")
+      .required("Balance required"),
+    accountNr: Yup.string().required("Account nr is required"),
+    accountBankName: Yup.string().required("Bank name is required!"),
+  });
 
   /**
    * Form submission
@@ -50,15 +44,6 @@ export default function AccountModal({ open, setOpen, oldValues }) {
     resetForm({});
     handleClose();
   };
-
-  /**
-   * Formik hook
-   */
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    validate,
-  });
 
   const handleClose = () => {
     setOpen(false);
@@ -71,81 +56,79 @@ export default function AccountModal({ open, setOpen, oldValues }) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <form onSubmit={formik.handleSubmit}>
-          <DialogTitle id="form-dialog-title">Nieuwe rekening</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Voer de gegevens in voor een nieuwe rekening
-            </DialogContentText>
-            <Grid container spacing={2}>
-              <Grid item>
-                <TextField
-                  id="accountOwnerName"
-                  name="accountOwnerName"
-                  label="Naam"
-                  helperText="Eignaar van de rekening"
-                  onChange={formik.handleChange}
-                  value={formik.values.accountOwnerName}
-                />
-                {formik.errors.accountOwnerName && (
-                  <TextError error={formik.errors.accountOwnerName} />
-                )}
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="accountBankName"
-                  name="accountBankName"
-                  label="Bank"
-                  helperText="Naam van de bank"
-                  onChange={formik.handleChange}
-                  value={formik.values.accountBankName}
-                />
-                {formik.errors.accountBankName && (
-                  <TextError error={formik.errors.accountBankName} />
-                )}
-              </Grid>
-              <Grid item>
-                <FormControl>
-                  <InputLabel htmlFor="formatted-text-mask-input">
-                    IBAN nr
-                  </InputLabel>
-                  <Input
-                    value={formik.values.accountNr}
-                    onChange={formik.handleChange}
-                    name="accountNr"
-                    id="accountNr"
-                    inputComponent={IbanField}
-                  />
-                </FormControl>
-                {formik.errors.accountNr && (
-                  <TextError error={formik.errors.accountNr} />
-                )}
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="accountCurrentBalance"
-                  name="accountCurrentBalance"
-                  label="Stand"
-                  type="number"
-                  helperText="Bedrag op de rekening"
-                  onChange={formik.handleChange}
-                  value={formik.values.accountCurrentBalance}
-                />
-                {formik.errors.accountCurrentBalance && (
-                  <TextError error={formik.errors.accountCurrentBalance} />
-                )}
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">
-              Cancel
-            </Button>
-            <Button type="submit" color="primary">
-              Subscribe
-            </Button>
-          </DialogActions>
-        </form>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({ submitForm, isSubmitting }) => (
+            <Form>
+              <DialogTitle id="form-dialog-title">Nieuwe rekening</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Voer de gegevens in voor een nieuwe rekening
+                </DialogContentText>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <Field
+                      component={TextField}
+                      id="accountOwnerName"
+                      name="accountOwnerName"
+                      helperText="Eignaar van de rekening"
+                    />
+                    <ErrorMessage
+                      name="accountOwnerName"
+                      component={TextError}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Field
+                      component={TextField}
+                      id="accountBankName"
+                      name="accountBankName"
+                      helperText="Naam van de bank"
+                    />
+                    <ErrorMessage
+                      name="accountBankName"
+                      component={TextError}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Field
+                      component={TextField}
+                      name="accountNr"
+                      id="accountNr"
+                      helperText="Rekening Nr"
+                      InputProps={{ inputComponent: IbanField }}
+                    />
+                    <ErrorMessage name="accountNr" component={TextError} />
+                  </Grid>
+                  <Grid item>
+                    <Field
+                      component={TextField}
+                      id="accountCurrentBalance"
+                      name="accountCurrentBalance"
+                      type="number"
+                      helperText="Bedrag op de rekening"
+                    />
+                    <ErrorMessage
+                      name="accountCurrentBalance"
+                      component={TextError}
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="secondary">
+                  Cancel
+                </Button>
+                <Button type="submit" color="primary">
+                  Subscribe
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
       </Dialog>
     </div>
   );

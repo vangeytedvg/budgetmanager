@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TextError = ({ error }) => {
+const TextError = (props) => {
   const classes = useStyles();
-  return <div className={classes.errorText}>{error}</div>;
+  return <div className={classes.errorText}>{props.children}</div>;
 };
 
 export default TextError;

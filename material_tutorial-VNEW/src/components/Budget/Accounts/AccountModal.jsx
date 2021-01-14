@@ -12,7 +12,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import EuroIcon from "@material-ui/icons/Euro";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
-
+import RateReviewIcon from "@material-ui/icons/RateReview";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -64,6 +64,7 @@ export default function AccountModal({
           accountnr: values.accountNr,
           bank: values.accountBankName,
           balance: values.accountCurrentBalance,
+          comments: values.accountComment,
         })
         .then(() => {
           resetForm({ values: "" });
@@ -92,6 +93,7 @@ export default function AccountModal({
           userid: values.userid,
           bank: values.accountBankName,
           balance: values.accountCurrentBalance,
+          comments: values.accountComment,
         })
         .then(() => {
           // Clear the form fields
@@ -200,6 +202,22 @@ export default function AccountModal({
                         startAdornment: (
                           <InputAdornment position="start">
                             <EuroIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item sm={12} md={4} lg={6}>
+                    <Field
+                      component={TextField}
+                      id="accountComment"
+                      name="accountComment"
+                      type="text"
+                      helperText="Commentaar"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <RateReviewIcon />
                           </InputAdornment>
                         ),
                       }}

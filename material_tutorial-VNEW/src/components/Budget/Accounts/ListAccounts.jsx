@@ -16,6 +16,7 @@ import {
   Collapse,
   Avatar,
   IconButton,
+  CircularProgress,
 } from "@material-ui/core";
 import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
@@ -114,6 +115,7 @@ const ListAccounts = (props) => {
     accountNr: "",
     accountBankName: "",
     accountCurrentBalance: "",
+    accountComment: "",
   });
 
   const classes = useStyles();
@@ -126,6 +128,7 @@ const ListAccounts = (props) => {
       accountNr: "",
       accountBankName: "",
       accountCurrentBalance: "",
+      accountComment: "",
     });
     setIdToWorkOn(0);
     setShowNewInvoiceModal(true);
@@ -143,6 +146,7 @@ const ListAccounts = (props) => {
       accountNr: currentAccount[0].accountnr,
       accountBankName: currentAccount[0].bank,
       accountCurrentBalance: currentAccount[0].balance,
+      accountComment: currentAccount[0].comments,
     });
 
     setIdToWorkOn(id);
@@ -215,6 +219,7 @@ const ListAccounts = (props) => {
       >
         Nieuwe rekening
       </Button>
+      {isLoading && <CircularProgress className={classes.circleSpacer} />}
       <Grid
         container
         spacing={4}
@@ -226,6 +231,9 @@ const ListAccounts = (props) => {
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>
+                  <Typography color="secondary" variant="h7">
+                    {account.comments}
+                  </Typography>
                   <Typography variant="h6">IBAN {account.accountnr}</Typography>
                   <Typography className={classes.balance} variant="h4">
                     <CountUp

@@ -5,6 +5,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles } from "@material-ui/core/styles";
+import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
+import { Grid } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  messageSubTitle: {
+    color: "#c58478",
+  },
+}));
 
 export default function MessageBox({
   open,
@@ -13,6 +22,7 @@ export default function MessageBox({
   messageTitle,
   messageSubTitle,
 }) {
+  const classes = useStyles();
   return (
     <div>
       <Dialog
@@ -21,17 +31,30 @@ export default function MessageBox({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{messageTitle}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <Grid container>
+            <Grid item>
+              <WarningTwoToneIcon
+                style={{ fontSize: 40, marginRight: "8px", color: "#fffb00" }}
+              />
+            </Grid>
+            <Grid item>{messageTitle}</Grid>
+          </Grid>
+        </DialogTitle>
+
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText
+            className={classes.messageSubTitle}
+            id="alert-dialog-description"
+          >
             {messageSubTitle}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleMessageBoxClose} color="primary">
+          <Button onClick={handleMessageBoxClose} color="primary" autofocus>
             Neen
           </Button>
-          <Button onClick={handleMessageBoxYes} color="secondary" autoFocus>
+          <Button onClick={handleMessageBoxYes} color="secondary">
             Ok
           </Button>
         </DialogActions>

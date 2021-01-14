@@ -20,6 +20,7 @@ import {
 import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import AccountModal from "./AccountModal";
@@ -210,6 +211,7 @@ const ListAccounts = (props) => {
         variant="contained"
         color="primary"
         onClick={handleNewAccount}
+        endIcon={<AddBoxOutlinedIcon />}
       >
         Nieuwe rekening
       </Button>
@@ -263,8 +265,8 @@ const ListAccounts = (props) => {
       />
       <MessageBox
         open={showDeleteAccountMessageBox}
-        messageTitle="Rekening verwijderen"
-        messageSubTitle="Bent u zeker dat deze rekening weg mag?"
+        messageTitle="Rekening verwijderen?"
+        messageSubTitle="Bent u zeker dat deze rekening weg mag? Deze actie kan niet ongedaan gemaakt worden!"
         handleMessageBoxClose={handleMessageBoxClose}
         handleMessageBoxYes={handleMessageBoxYes}
       />

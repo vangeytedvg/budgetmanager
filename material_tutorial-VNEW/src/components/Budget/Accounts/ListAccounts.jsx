@@ -19,10 +19,13 @@ import {
 } from "@material-ui/core";
 import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import AccountModal from "./AccountModal";
 import MessageBox from "../../UI_Utils/MessageBox";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 /**
  * Styling the component
@@ -81,7 +84,8 @@ const ListAccounts = (props) => {
   /**
    * Show the delete messagebox
    */
-  const handleShowMessageBox = () => {
+  const handleShowMessageBox = (id) => {
+    setIdToWorkOn(id);
     setShowDeleteAccountMessageBox(true);
   };
 
@@ -94,11 +98,12 @@ const ListAccounts = (props) => {
 
   /**
    * Show messagebox for deletion
-   * @param {id of the record to delete²} id
+   * @param {id of the record to delete} id
    */
   const handleMessageBoxYes = (id) => {
+    deleteAccount();
+    setIdToWorkOn(0);
     setShowDeleteAccountMessageBox(false);
-    alert("Rekening dada");
   };
 
   const [initialValues, setInitialValues] = useState({
@@ -143,27 +148,27 @@ const ListAccounts = (props) => {
     setShowNewInvoiceModal(true);
   };
 
+  /**
+   * Permanently delete the selected account nr
+   */
   const deleteAccount = () => {
-    // setShowMessageToDelete(false);
-    // const id = e.id
     db.collection("accounts")
       .doc(idToWorkOn)
       .delete()
       .then(() => {
-        // return toast("Record deleted", {
-        //   position: toast.POSITION.BOTTOM_CENTER,
-        //   type: "info",
-        //   autoClose: 3000,
-        // });
+        return toast("Rekening is verwijderd!", {
+          position: toast.POSITION.TOP_CENTER,
+          type: "success",
+          autoClose: 3000,
+        });
       })
       .catch((err) => {
-        // return toast("Error", {
-        //   position: toast.POSITION.BOTTOM_CENTER,
-        //   type: "warning",
-        //   autoClose: 3000,
-        // });
+        return toast("Fout opgetreden!", {
+          position: toast.POSITION.TOP_CENTER,
+          type: "warning",
+          autoClose: 3000,
+        });
       });
-    // setShowMessage(false);
   };
 
   /**
@@ -242,7 +247,7 @@ const ListAccounts = (props) => {
                     onClick={() => handleShowMessageBox(account.id)}
                     color="primary"
                   >
-                    <EditIcon />
+                    <DeleteForeverIcon />
                   </IconButton>
                 </CardActions>
               </Card>

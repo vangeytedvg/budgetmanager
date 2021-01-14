@@ -209,10 +209,10 @@ export default function AccountModal({
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose} color="secondary">
-                  Cancel
+                  Annuleren
                 </Button>
                 <Button type="submit" color="primary">
-                  Subscribe
+                  Opslaan
                 </Button>
               </DialogActions>
             </Form>

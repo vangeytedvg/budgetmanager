@@ -31,7 +31,7 @@ export default function MessageBox({
           <Button onClick={handleMessageBoxClose} color="primary">
             Neen
           </Button>
-          <Button onClick={handleMessageBoxYes} color="primary" autoFocus>
+          <Button onClick={handleMessageBoxYes} color="secondary" autoFocus>
             Ok
           </Button>
         </DialogActions>

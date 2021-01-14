@@ -2,19 +2,14 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import SectionTitle from "../../UI_Utils/SectionTitle";
-import { Button, Grid, Paper, TextField } from "@material-ui/core";
-import { useFormik } from "formik";
+import { Button, Grid } from "@material-ui/core";
 import { CurrentISODate } from "../../../utils";
-import InputMask from "react-input-mask";
-import TextError from "../../UI_Utils/TextError";
+import Tooltip from "@material-ui/core/Tooltip";
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
-  Collapse,
-  Avatar,
   IconButton,
   CircularProgress,
 } from "@material-ui/core";
@@ -247,18 +242,26 @@ const ListAccounts = (props) => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <IconButton
-                    onClick={() => handleEditAccount(account.id)}
-                    color="primary"
+                  <Tooltip
+                    title="Rekeningdetails aanpassen"
+                    placement="top"
+                    arrow
                   >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleShowMessageBox(account.id)}
-                    color="primary"
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
+                    <IconButton
+                      onClick={() => handleEditAccount(account.id)}
+                      color="primary"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Rekening wissen" placement="top" arrow>
+                    <IconButton
+                      onClick={() => handleShowMessageBox(account.id)}
+                      color="primary"
+                    >
+                      <DeleteForeverIcon />
+                    </IconButton>
+                  </Tooltip>
                 </CardActions>
               </Card>
             </Grid>

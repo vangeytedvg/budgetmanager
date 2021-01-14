@@ -237,7 +237,7 @@ const ListAccounts = (props) => {
                   <Typography variant="h6">IBAN {account.accountnr}</Typography>
                   <Typography className={classes.balance} variant="h4">
                     <CountUp
-                      start={0}
+                      start={-1}
                       end={account.balance}
                       duration={1.5}
                       decimals={2}

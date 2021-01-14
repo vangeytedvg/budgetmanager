@@ -19,7 +19,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { Field, Form, Formik } from "formik";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { CurrentISODate } from "../../../utils";
 import { db } from "../../../database/firebase";
 
@@ -29,6 +30,8 @@ export default function AccountModal({
   initialValues,
   idToWorkOn,
 }) {
+  toast.configure();
+
   /**
    * The Validation schema for this form
    */
@@ -52,8 +55,9 @@ export default function AccountModal({
    * @param {} values
    */
   const onSubmit = (values, { resetForm }) => {
+    // If we have an idToWorkOn value, then this is an update
     if (idToWorkOn) {
-      db.collection("accountser")
+      db.collection("accounts")
         .doc(idToWorkOn)
         .update({
           owner: values.accountOwnerName,
@@ -62,15 +66,51 @@ export default function AccountModal({
           balance: values.accountCurrentBalance,
         })
         .then(() => {
-          alert("Ok");
+          resetForm({ values: "" });
+          return toast("Gegevens aangepast!", {
+            position: toast.POSITION.TOP_CENTER,
+            type: "success",
+            autoClose: 3000,
+          });
         })
         .catch((err) => {
-          alert(err);
+          resetForm({ values: "" });
+          return toast(`Fout opgetreden! ${err}`, {
+            position: toast.POSITION.TOP_CENTER,
+            type: "error",
+            autoClose: 10000,
+          });
         });
-    } else {
-      alert("NEW " + JSON.stringify(values));
     }
-    resetForm({});
+    if (!idToWorkOn) {
+      // No idToWokOn, so this is a new record
+      db.collection("accounts")
+        .add({
+          owner: values.accountOwnerName,
+          accountnr: values.accountNr,
+          date_created: CurrentISODate(),
+          userid: values.userid,
+          bank: values.accountBankName,
+          balance: values.accountCurrentBalance,
+        })
+        .then(() => {
+          // Clear the form fields
+          resetForm({ values: "" });
+          return toast("Nieuwe rekening aangemaakt!", {
+            position: toast.POSITION.TOP_CENTER,
+            type: "success",
+            autoClose: 3000,
+          });
+        })
+        .catch((err) => {
+          resetForm({ values: "" });
+          return toast(`Fout opgetreden! ${err}`, {
+            position: toast.POSITION.TOP_CENTER,
+            type: "error",
+            autoClose: 10000,
+          });
+        });
+    }
     handleClose();
   };
 

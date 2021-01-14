@@ -70,7 +70,7 @@ const Home = () => {
   return (
     <div className={classes.content}>
       <div className={classes.toolbar} />
-      <video
+      {/* <video
         autoPlay
         loop
         muted
@@ -87,7 +87,7 @@ const Home = () => {
         }}
       >
         <source src={milkyway} type="video/mp4" />
-      </video>
+      </video> */}
       <SectionTitle maintitle="Dashboard" subtitle="algemeen overzicht" />
       <Grid
         container

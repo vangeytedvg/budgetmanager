@@ -22,6 +22,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import AccountModal from "./AccountModal";
+import MessageBox from "../../UI_Utils/MessageBox";
 
 /**
  * Styling the component
@@ -69,10 +70,40 @@ const ListAccounts = (props) => {
   const [balance, setBalance] = useState(0);
   const [idToWorkOn, setIdToWorkOn] = useState(0);
   const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
+  const [
+    showDeleteAccountMessageBox,
+    setShowDeleteAccountMessageBox,
+  ] = useState(false);
+
+  // Get the current user
+  const { currentUser, logout } = useAuth();
+
+  /**
+   * Show the delete messagebox
+   */
+  const handleShowMessageBox = () => {
+    setShowDeleteAccountMessageBox(true);
+  };
+
+  /**
+   * Close the Delete messagebox
+   */
+  const handleMessageBoxClose = () => {
+    setShowDeleteAccountMessageBox(false);
+  };
+
+  /**
+   * Show messagebox for deletion
+   * @param {id of the record to delete²} id
+   */
+  const handleMessageBoxYes = (id) => {
+    setShowDeleteAccountMessageBox(false);
+    alert("Rekening dada");
+  };
 
   const [initialValues, setInitialValues] = useState({
     date_created: CurrentISODate(),
-    userid: 0, //currentUser.uid,
+    userid: currentUser.uid,
     accountOwnerName: "",
     accountNr: "",
     accountBankName: "",
@@ -80,9 +111,6 @@ const ListAccounts = (props) => {
   });
 
   const classes = useStyles();
-  // Get the current user
-
-  const { currentUser, logout } = useAuth();
 
   const handleNewAccount = () => {
     setInitialValues({
@@ -101,7 +129,7 @@ const ListAccounts = (props) => {
     // Not needed to go to firestore again, we have the data already,
     // so filter it out from the accounts array
     let currentAccount = accounts.filter((accounts) => accounts.id === id);
-    console.log("Gevonden ", currentAccount[0]);
+
     setInitialValues({
       date_created: CurrentISODate(),
       userid: currentUser.uid,
@@ -110,7 +138,7 @@ const ListAccounts = (props) => {
       accountBankName: currentAccount[0].bank,
       accountCurrentBalance: currentAccount[0].balance,
     });
-    console.log("Werd doorgegeven: ", initialValues);
+
     setIdToWorkOn(id);
     setShowNewInvoiceModal(true);
   };
@@ -145,6 +173,8 @@ const ListAccounts = (props) => {
     setIsLoading(true);
     db.collection("accounts")
       .where("userid", "==", currentUser.uid)
+      .orderBy("owner")
+      .orderBy("bank")
       .onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
@@ -185,11 +215,11 @@ const ListAccounts = (props) => {
       >
         {accounts.map((account, key) => {
           return (
-            <Grid item xs={12} md={6} lg={6}>
+            <Grid item xs={12} md={4} lg={4}>
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>
-                  <Typography variant="h6">{account.accountnr}</Typography>
+                  <Typography variant="h6">IBAN {account.accountnr}</Typography>
                   <Typography className={classes.balance} variant="h4">
                     <CountUp
                       start={0}
@@ -208,6 +238,12 @@ const ListAccounts = (props) => {
                   >
                     <EditIcon />
                   </IconButton>
+                  <IconButton
+                    onClick={() => handleShowMessageBox(account.id)}
+                    color="primary"
+                  >
+                    <EditIcon />
+                  </IconButton>
                 </CardActions>
               </Card>
             </Grid>
@@ -219,6 +255,13 @@ const ListAccounts = (props) => {
         initialValues={initialValues}
         setOpen={setShowNewInvoiceModal}
         idToWorkOn={idToWorkOn}
+      />
+      <MessageBox
+        open={showDeleteAccountMessageBox}
+        messageTitle="Rekening verwijderen"
+        messageSubTitle="Bent u zeker dat deze rekening weg mag?"
+        handleMessageBoxClose={handleMessageBoxClose}
+        handleMessageBoxYes={handleMessageBoxYes}
       />
     </div>
   );

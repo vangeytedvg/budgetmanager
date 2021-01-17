@@ -76,7 +76,7 @@ const ListAccounts = (props) => {
   ] = useState(false);
 
   // Get the current user
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
 
   /**
    * Show the delete messagebox
@@ -186,8 +186,8 @@ const ListAccounts = (props) => {
           docs.push({ ...doc.data(), id: doc.id });
         });
         setAccounts(docs);
-        setIsLoading(false);
       });
+    setIsLoading(false);
   };
 
   /**
@@ -203,7 +203,7 @@ const ListAccounts = (props) => {
       <div className={classes.toolbar} />
       <SectionTitle
         maintitle="Lijst rekeningen"
-        subtitle="algemeen overzicht"
+        subtitle="algemeen overzicht en aanmaak"
       />
       <Button
         className={classes.button}

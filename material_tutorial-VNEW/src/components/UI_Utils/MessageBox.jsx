@@ -1,3 +1,9 @@
+/**
+ * MessageBox.jsx
+ * Material-ui version of the messagebox.
+ * Author : Danny Van Geyte
+ * LM : 15/01/2021
+ */
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -41,7 +47,6 @@ export default function MessageBox({
             <Grid item>{messageTitle}</Grid>
           </Grid>
         </DialogTitle>
-
         <DialogContent>
           <DialogContentText
             className={classes.messageSubTitle}

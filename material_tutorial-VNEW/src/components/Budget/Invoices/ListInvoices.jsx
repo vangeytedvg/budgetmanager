@@ -282,7 +282,7 @@ export default function EnhancedTable() {
       >
         Nieuwe faktuur
       </Button>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={6}>
         <TableContainer>
           {isLoading && <CircularProgress className={classes.circleSpacer} />}
           <Table

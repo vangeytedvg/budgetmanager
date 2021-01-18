@@ -44,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.easeIn,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    backgroundColor: "#12412d",
+
+    // 12412d
+    backgroundColor: "#205000",
   },
   appBarShift: {
     marginLeft: drawerWidth,
@@ -92,7 +94,8 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     display: "flex",
-    backgroundColor: "#1d5f43",
+    // backgroundColor: "#1d5f43",
+    backgroundColor: "#205000",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
@@ -102,6 +105,11 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+  },
+  titlebar: {
+    backgroundColor: "#205000",
+    backgroundImage: `url(${bar})`,
+    backgroundPosition: "right",
   },
   title: {
     flexGrow: 1,
@@ -235,7 +243,7 @@ const ClippedDrawer = (props) => {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
+        <Toolbar className={classes.titlebar}>
           <IconButton
             color="inherit"
             aria-label="open drawer"

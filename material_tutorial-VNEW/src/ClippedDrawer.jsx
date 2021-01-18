@@ -30,6 +30,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import { useAuth } from "./Context/AuthContext";
 import denkatech from "./images/denkatech.png";
+import bar from "./images/bar.png";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -112,6 +114,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "15px",
     color: "#00ff55",
     textShadow: "0px 0px 16px #fff",
+  },
+  bibber: {
+    height: "100%",
+    backgroundImage: `url(${bar})`,
+    backgroundPosition: "center",
   },
 }));
 
@@ -196,13 +203,13 @@ const ClippedDrawer = (props) => {
       icon: <ViewListTwoToneIcon />,
       linkto: () => history.push("/incomeoverview"),
     },
+    // {
+    //   text: "Fakturen",
+    //   icon: <DescriptionTwoToneIcon />,
+    //   linkto: () => history.push("/invoices"),
+    // },
     {
       text: "Fakturen",
-      icon: <DescriptionTwoToneIcon />,
-      linkto: () => history.push("/invoices"),
-    },
-    {
-      text: "Overzicht Facturen",
       icon: <ReceiptIcon />,
       linkto: () => history.push("/invoicesoverview"),
     },
@@ -286,7 +293,7 @@ const ClippedDrawer = (props) => {
           </IconButton>
         </div>
         <Divider />
-        <div className={classes.drawerContainer}>
+        <div className={classes.bibber}>
           <List>
             {menuOptions.map((item, index) => {
               // Need to destructure here, otherwise react complains

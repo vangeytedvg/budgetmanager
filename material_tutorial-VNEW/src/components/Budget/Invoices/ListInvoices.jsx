@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Typography,
+  IconButton,
+  Tooltip,
+  Switch,
+  FormControlLabel,
+  CircularProgress,
+  Paper,
+  Button,
+} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
+
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import SectionTitle from "../../UI_Utils/SectionTitle";
@@ -86,6 +92,18 @@ const headCells = [
     disablePadding: false,
     label: "Kommentaar",
   },
+  {
+    id: "ed",
+    numeric: false,
+    disablePadding: false,
+    label: "Edit",
+  },
+  {
+    id: "del",
+    numeric: false,
+    disablePadding: false,
+    label: "Wis",
+  },
 ];
 
 const EnhancedTableHead = (props) => {
@@ -98,7 +116,7 @@ const EnhancedTableHead = (props) => {
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <StyledTableCell
+          <StyledTableCellHead
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "default"}
@@ -116,7 +134,7 @@ const EnhancedTableHead = (props) => {
                 </span>
               ) : null}
             </TableSortLabel>
-          </StyledTableCell>
+          </StyledTableCellHead>
         ))}
       </TableRow>
     </TableHead>
@@ -129,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: theme.mixins.toolbar,
   paper: {
-    width: "98%",
+    width: "100%",
     marginBottom: theme.spacing(2),
     padding: theme.spacing(2),
   },
@@ -153,22 +171,31 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  actionButtonDelete: {
+    color: "#e44d4d",
+  },
+  actionButtonEdit: {
+    color: "#eeff00",
+  },
+  button: {
+    marginBottom: "10px",
+  },
 }));
 
-const StyledTableCell = withStyles((theme) => ({
+const StyledTableCellHead = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
   },
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "#79ac77",
+    },
+    "&:nth-of-type(even)": {
+      backgroundColor: "#497a48",
     },
   },
 }))(TableRow);
@@ -177,11 +204,10 @@ export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState("");
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [select, setSelection] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const { currentUser } = useAuth();
@@ -189,35 +215,6 @@ export default function EnhancedTable() {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  //   const handleSelectAllClick = (event) => {
-  //     if (event.target.checked) {
-  //       const newSelecteds = rows.map((n) => n.name);
-  //       setSelected(newSelecteds);
-  //       return;
-  //     }
-  //     setSelected([]);
-  //   };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -232,8 +229,6 @@ export default function EnhancedTable() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
-
-  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -257,18 +252,39 @@ export default function EnhancedTable() {
       });
   };
 
+  const handleEdit = (id) => {
+    setSelected(id);
+    let currentInvoice = rows.filter((row) => row.id === id);
+    console.log(currentInvoice);
+    alert(id);
+  };
+
   useEffect(() => {
     getInvoices();
     // Avoid eslint error:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleNewInvoice = () => {
+    return false;
+  };
+
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <SectionTitle maintitle="Fakturen" subtitle="ingave en overzicht" />
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
+        onClick={handleNewInvoice}
+        endIcon={<AddBoxOutlinedIcon />}
+      >
+        Nieuwe faktuur
+      </Button>
       <Paper className={classes.paper}>
         <TableContainer>
+          {isLoading && <CircularProgress className={classes.circleSpacer} />}
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
@@ -287,33 +303,8 @@ export default function EnhancedTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
-                    <StyledTableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.sender)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell> */}
-                      {/* <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.id}
-                      </TableCell> */}
+                    <StyledTableRow hover tabIndex={-1} key={row.id}>
                       <TableCell align="left">{row.sender}</TableCell>
                       <TableCell align="right">{row.datereceived}</TableCell>
                       <TableCell align="right">{row.datetopay}</TableCell>
@@ -326,6 +317,34 @@ export default function EnhancedTable() {
                         {row.stucturedmessage}
                       </TableCell>
                       <TableCell align="left">{row.comments}</TableCell>
+                      <TableCell align="center">
+                        <Tooltip
+                          title="Faktuur aanpassen"
+                          placement="bottom"
+                          arrow
+                        >
+                          <IconButton
+                            className={classes.actionButtonEdit}
+                            onClick={() => handleEdit(row.id)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Tooltip
+                          title="Faktuur wissen"
+                          placement="bottom"
+                          arrow
+                        >
+                          <IconButton
+                            className={classes.actionButtonDelete}
+                            onClick={() => handleEdit(row.id)}
+                          >
+                            <DeleteForeverIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
                     </StyledTableRow>
                   );
                 })}

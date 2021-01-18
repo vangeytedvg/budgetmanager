@@ -28,6 +28,7 @@ import UpdateProfile from "./Context/UpdateProfile";
 import { AuthProvider } from "./Context/AuthContext";
 import PrivateRoute from "./Context/PrivateRoute";
 import ListAccounts from "./components/Budget/Accounts/ListAccounts";
+import ListInvoices from "./components/Budget/Invoices/ListInvoices";
 
 const useStyles = makeStyles({
   container: {
@@ -75,10 +76,7 @@ function App() {
               component={ExpensesOverview}
             />
             <PrivateRoute path="/invoices" component={Invoices} />
-            <PrivateRoute
-              path="/invoicesoverview"
-              component={InvoicesOverview}
-            />
+            <PrivateRoute path="/invoicesoverview" component={ListInvoices} />
             <PrivateRoute path="/payplan" component={PaymentPlans} />
 
             <Route from="/login" render={(props) => <Login {...props} />} />

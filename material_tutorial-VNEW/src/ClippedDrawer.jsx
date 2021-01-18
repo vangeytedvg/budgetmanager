@@ -197,7 +197,7 @@ const ClippedDrawer = (props) => {
       linkto: () => history.push("/incomeoverview"),
     },
     {
-      text: "Facturen",
+      text: "Fakturen",
       icon: <DescriptionTwoToneIcon />,
       linkto: () => history.push("/invoices"),
     },

@@ -21,7 +21,7 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
-
+import { CurrentISODate } from "../../../utils";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import SectionTitle from "../../UI_Utils/SectionTitle";
@@ -200,7 +200,7 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function EnhancedTable() {
+export default function ListInvoices() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -211,6 +211,23 @@ export default function EnhancedTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const { currentUser } = useAuth();
+  const [idToWorkOn, setIdToWorkOn] = useState(0);
+  const [initialValues, setInitialValues] = useState({
+    accountnr: "",
+    amount: 0,
+    comments: "",
+    datereceived: "",
+    datetopay: "",
+    inputdate: CurrentISODate(),
+    payed: false,
+    sender: "",
+  });
+  const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
+  const [
+    showDeleteInvoiceMessageBox,
+    setShowDeleteInvoiceMessageBox,
+  ] = useState(false);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -257,6 +274,20 @@ export default function EnhancedTable() {
     let currentInvoice = rows.filter((row) => row.id === id);
     console.log(currentInvoice);
     alert(id);
+  };
+
+  const handleNewAccount = () => {
+    setInitialValues({
+      date_created: CurrentISODate(),
+      userid: currentUser.uid,
+      accountOwnerName: "",
+      accountNr: "",
+      accountBankName: "",
+      accountCurrentBalance: "",
+      accountComment: "",
+    });
+    setIdToWorkOn(0);
+    setShowNewInvoiceModal(true);
   };
 
   useEffect(() => {
@@ -325,6 +356,7 @@ export default function EnhancedTable() {
                         >
                           <IconButton
                             className={classes.actionButtonEdit}
+                            size={dense ? "small" : "medium"}
                             onClick={() => handleEdit(row.id)}
                           >
                             <EditIcon />
@@ -339,6 +371,7 @@ export default function EnhancedTable() {
                         >
                           <IconButton
                             className={classes.actionButtonDelete}
+                            size={dense ? "small" : "medium"}
                             onClick={() => handleEdit(row.id)}
                           >
                             <DeleteForeverIcon />

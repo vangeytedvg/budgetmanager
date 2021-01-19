@@ -75,6 +75,16 @@ const ListAccounts = (props) => {
     setShowDeleteAccountMessageBox,
   ] = useState(false);
 
+  const [initialValues, setInitialValues] = useState({
+    date_created: CurrentISODate(),
+    userid: currentUser.uid,
+    accountOwnerName: "",
+    accountNr: "",
+    accountBankName: "",
+    accountCurrentBalance: "",
+    accountComment: "",
+  });
+
   // Get the current user
   const { currentUser } = useAuth();
 
@@ -102,16 +112,6 @@ const ListAccounts = (props) => {
     setIdToWorkOn(0);
     setShowDeleteAccountMessageBox(false);
   };
-
-  const [initialValues, setInitialValues] = useState({
-    date_created: CurrentISODate(),
-    userid: currentUser.uid,
-    accountOwnerName: "",
-    accountNr: "",
-    accountBankName: "",
-    accountCurrentBalance: "",
-    accountComment: "",
-  });
 
   const classes = useStyles();
 

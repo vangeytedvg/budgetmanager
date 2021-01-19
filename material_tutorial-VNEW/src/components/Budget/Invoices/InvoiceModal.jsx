@@ -56,7 +56,7 @@ export default function AccountModal({
   const onSubmit = (values, { resetForm }) => {
     // If we have an idToWorkOn value, then this is an update
     if (idToWorkOn) {
-      db.collection("accounts")
+      db.collection("invoices")
         .doc(idToWorkOn)
         .update({
           accountnr: values.accountnr,
@@ -87,7 +87,7 @@ export default function AccountModal({
     }
     if (!idToWorkOn) {
       // No idToWokOn, so this is a new record
-      db.collection("accounts")
+      db.collection("invoices")
         .add({
           owner: values.accountOwnerName,
           accountnr: values.accountNr,

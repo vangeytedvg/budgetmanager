@@ -77,7 +77,7 @@ const ListAccounts = (props) => {
 
   const [initialValues, setInitialValues] = useState({
     date_created: CurrentISODate(),
-    userid: currentUser.uid,
+    userid: 0, // currentUser.uid,
     accountOwnerName: "",
     accountNr: "",
     accountBankName: "",

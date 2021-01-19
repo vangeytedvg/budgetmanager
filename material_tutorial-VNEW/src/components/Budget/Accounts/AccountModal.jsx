@@ -13,16 +13,23 @@ import EuroIcon from "@material-ui/icons/Euro";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import RateReviewIcon from "@material-ui/icons/RateReview";
+import SaveIcon from "@material-ui/icons/Save";
+import ClearIcon from "@material-ui/icons/Clear";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { DialogTitle } from "../../UI_Utils/DialogTitle";
 import { Field, Form, Formik } from "formik";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CurrentISODate } from "../../../utils";
 import { db } from "../../../database/firebase";
+import Zoom from "@material-ui/core/Zoom";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Zoom in={true} {...props} />;
+});
 
 export default function AccountModal({
   open,
@@ -126,6 +133,7 @@ export default function AccountModal({
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        TransitionComponent={Transition}
       >
         <Formik
           initialValues={initialValues}
@@ -134,7 +142,7 @@ export default function AccountModal({
         >
           {({ submitForm, isSubmitting }) => (
             <Form>
-              <DialogTitle id="form-dialog-title">
+              <DialogTitle id="form-dialog-title" onClose={handleClose}>
                 {idToWorkOn
                   ? "Bestaande rekening aanpassen"
                   : "Nieuwe rekening"}
@@ -226,10 +234,14 @@ export default function AccountModal({
                 </Grid>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button
+                  onClick={handleClose}
+                  endIcon={<ClearIcon />}
+                  color="secondary"
+                >
                   Annuleren
                 </Button>
-                <Button type="submit" color="primary">
+                <Button type="submit" endIcon={<SaveIcon />} color="primary">
                   Opslaan
                 </Button>
               </DialogActions>

@@ -1,4 +1,6 @@
 import React from "react";
+import SaveIcon from "@material-ui/icons/Save";
+import ClearIcon from "@material-ui/icons/Clear";
 import {
   Button,
   Grid,
@@ -11,14 +13,14 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
+  // DialogTitle,
 } from "@material-ui/core";
+import { DialogTitle } from "../../UI_Utils/DialogTitle";
 import { Switch, TextField } from "formik-material-ui";
 import IbanField from "../../UI_Utils/IbanField";
 import {
   AccountCircle,
   Euro as EuroIcon,
-  AccountBalance as AccountBalanceIcon,
   CreditCard as CreditCardIcon,
   RateReview as RateReviewIcon,
 } from "@material-ui/icons";
@@ -28,6 +30,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CurrentISODate } from "../../../utils";
 import { db } from "../../../database/firebase";
+import Zoom from "@material-ui/core/Zoom";
+
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Zoom in={true} {...props} />;
+});
 
 export default function InvoiceModal({
   open,
@@ -136,6 +146,7 @@ export default function InvoiceModal({
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         maxWidth="md"
+        TransitionComponent={Transition}
       >
         <Formik
           initialValues={initialValues}
@@ -144,7 +155,7 @@ export default function InvoiceModal({
         >
           {({ submitForm, isSubmitting }) => (
             <Form>
-              <DialogTitle id="form-dialog-title">
+              <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                 {idToWorkOn ? "Bestaande faktuur aanpassen" : "Nieuwe faktuur"}
               </DialogTitle>
               <DialogContent>
@@ -275,12 +286,16 @@ export default function InvoiceModal({
                 </Grid>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button
+                  onClick={handleClose}
+                  endIcon={<ClearIcon />}
+                  color="secondary"
+                >
                   Annuleren
                 </Button>
-                <Button type="submit" color="primary">
+                <Button type="submit" endIcon={<SaveIcon />} color="primary">
                   Opslaan
-                </Button>
+                </Button>{" "}
               </DialogActions>
             </Form>
           )}

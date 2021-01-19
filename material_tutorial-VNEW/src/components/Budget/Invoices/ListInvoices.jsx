@@ -25,22 +25,11 @@ import { CurrentISODate } from "../../../utils";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import SectionTitle from "../../UI_Utils/SectionTitle";
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import {
+  descendingComparator,
+  getComparator,
+} from "../../UI_Utils/SortingHelpers";
+import InvoiceModal from "./InvoiceModal";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -53,12 +42,6 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  //   {
-  //     id: "id",
-  //     numeric: false,
-  //     disablePadding: true,
-  //     label: "Id",
-  //   },
   { id: "sender", numeric: false, disablePadding: false, label: "Afzender" },
   {
     id: "datereceived",
@@ -108,6 +91,7 @@ const headCells = [
 
 const EnhancedTableHead = (props) => {
   const { classes, order, orderBy, onRequestSort } = props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -216,6 +200,7 @@ export default function ListInvoices() {
     accountnr: "",
     amount: 0,
     comments: "",
+    structuredmessage: "",
     datereceived: "",
     datetopay: "",
     inputdate: CurrentISODate(),
@@ -276,15 +261,17 @@ export default function ListInvoices() {
     alert(id);
   };
 
-  const handleNewAccount = () => {
+  const handleNewInvoice = () => {
     setInitialValues({
-      date_created: CurrentISODate(),
-      userid: currentUser.uid,
-      accountOwnerName: "",
-      accountNr: "",
-      accountBankName: "",
-      accountCurrentBalance: "",
-      accountComment: "",
+      accountnr: "",
+      amount: 0,
+      comments: "",
+      structuredmessage: "",
+      datereceived: "",
+      datetopay: "",
+      inputdate: CurrentISODate(),
+      payed: false,
+      sender: "",
     });
     setIdToWorkOn(0);
     setShowNewInvoiceModal(true);
@@ -295,10 +282,6 @@ export default function ListInvoices() {
     // Avoid eslint error:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleNewInvoice = () => {
-    return false;
-  };
 
   return (
     <main className={classes.content}>
@@ -402,6 +385,12 @@ export default function ListInvoices() {
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
+      />
+      <InvoiceModal
+        open={showNewInvoiceModal}
+        initialValues={initialValues}
+        setOpen={setShowNewInvoiceModal}
+        idToWorkOn={idToWorkOn}
       />
     </main>
   );

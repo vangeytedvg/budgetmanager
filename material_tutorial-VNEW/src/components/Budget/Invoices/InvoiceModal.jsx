@@ -1,30 +1,35 @@
 import React from "react";
-import { Button, Grid } from "@material-ui/core";
-import { TextField } from "formik-material-ui";
-
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import * as Yup from "yup";
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  FormControl,
+  FormControlLabel,
+  Input,
+  InputLabel,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@material-ui/core";
+import { Switch, TextField } from "formik-material-ui";
 import IbanField from "../../UI_Utils/IbanField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import EuroIcon from "@material-ui/icons/Euro";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import CreditCardIcon from "@material-ui/icons/CreditCard";
-import RateReviewIcon from "@material-ui/icons/RateReview";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import {
+  AccountCircle,
+  Euro as EuroIcon,
+  AccountBalance as AccountBalanceIcon,
+  CreditCard as CreditCardIcon,
+  RateReview as RateReviewIcon,
+} from "@material-ui/icons";
+import * as Yup from "yup";
 import { Field, Form, Formik } from "formik";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CurrentISODate } from "../../../utils";
 import { db } from "../../../database/firebase";
 
-export default function AccountModal({
+export default function InvoiceModal({
   open,
   setOpen,
   initialValues,
@@ -40,13 +45,14 @@ export default function AccountModal({
       .max(40, "Maximum 40 tekens")
       .required("Afzender is verplicht"),
     datereceived: Yup.string().required("Ontvangstdatum verplicht!"),
+    amount: Yup.number().required("Bedrag verplicht!"),
     datetopay: Yup.string()
       // Replace all non digits and check if the lenght is 14
       .required("Betaaldatum verplicht!"),
     accountr: Yup.string().required("Rekening nr verplicht"),
-    structuredmessage: Yup.notrequired(),
-    comments: Yup.notrequired(),
-    payed: Yup.notrequired(),
+    structuredmessage: Yup.string().notRequired(),
+    comments: Yup.string().notRequired(),
+    payed: Yup.string().notRequired(),
   });
 
   /**
@@ -62,6 +68,7 @@ export default function AccountModal({
           accountnr: values.accountnr,
           amount: values.amount,
           comments: values.comments,
+          structuredmessage: values.structuredmessage,
           datereceived: values.datereceived,
           datetopay: values.datetopay,
           inputdate: CurrentISODate(),
@@ -128,6 +135,7 @@ export default function AccountModal({
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        maxWidth="md"
       >
         <Formik
           initialValues={initialValues}
@@ -137,21 +145,20 @@ export default function AccountModal({
           {({ submitForm, isSubmitting }) => (
             <Form>
               <DialogTitle id="form-dialog-title">
-                {idToWorkOn
-                  ? "Bestaande rekening aanpassen"
-                  : "Nieuwe rekening"}
+                {idToWorkOn ? "Bestaande faktuur aanpassen" : "Nieuwe faktuur"}
               </DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  Gegevens voor deze rekening
+                  Gegevens voor deze faktuur
                 </DialogContentText>
                 <Grid container spacing={2}>
-                  <Grid item sm={12} md={4} lg={6}>
+                  <Grid item sm={12} md={6} lg={4}>
                     <Field
                       component={TextField}
-                      id="accountOwnerName"
-                      name="accountOwnerName"
-                      helperText="Eignaar van de rekening"
+                      fullWidth
+                      id="sender"
+                      name="sender"
+                      helperText="Afzender van de faktuur"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -161,28 +168,34 @@ export default function AccountModal({
                       }}
                     />
                   </Grid>
-                  <Grid item sm={12} md={4} lg={6}>
+                  <Grid item sm={12} md={6} lg={4}>
                     <Field
+                      fullWidth
                       component={TextField}
-                      id="accountBankName"
-                      name="accountBankName"
-                      helperText="Naam van de bank"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AccountBalanceIcon />
-                          </InputAdornment>
-                        ),
-                      }}
+                      id="datereceived"
+                      name="datereceived"
+                      helperText="Ontvangen op"
+                      type="date"
                     />
                   </Grid>
-                  <Grid item sm={12} md={4} lg={6}>
+                  <Grid item sm={12} md={6} lg={4}>
+                    <Field
+                      fullWidth
+                      component={TextField}
+                      id="datetopay"
+                      name="datetopay"
+                      helperText="Uiterste betaaldatum"
+                      type="date"
+                    />
+                  </Grid>
+                  <Grid item sm={12} md={6} lg={4}>
                     {/* Using the iban field with InputProps */}
                     <Field
+                      fullWidth
                       component={TextField}
-                      name="accountNr"
-                      id="accountNr"
-                      helperText="Rekening Nr"
+                      name="accountnr"
+                      id="accountnr"
+                      helperText="Rekeningnummer afzender"
                       InputProps={{
                         inputComponent: IbanField,
                         startAdornment: (
@@ -193,13 +206,14 @@ export default function AccountModal({
                       }}
                     />
                   </Grid>
-                  <Grid item sm={12} md={4} lg={6}>
+                  <Grid item sm={12} md={6} lg={4}>
                     <Field
+                      fullWidth
                       component={TextField}
-                      id="accountCurrentBalance"
-                      name="accountCurrentBalance"
+                      id="amount"
+                      name="amount"
                       type="number"
-                      helperText="Bedrag op de rekening"
+                      helperText="Te betalen bedrag"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -209,8 +223,26 @@ export default function AccountModal({
                       }}
                     />
                   </Grid>
-                  <Grid item sm={12} md={4} lg={6}>
+                  <Grid item sm={12} md={6} lg={4}>
                     <Field
+                      fullWidth
+                      component={TextField}
+                      id="structuredmessage"
+                      name="structuredmessage"
+                      type="text"
+                      helperText="Mededeling"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <RateReviewIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item sm={12} md={6} lg={4}>
+                    <Field
+                      fullWidth
                       component={TextField}
                       id="accountComment"
                       name="accountComment"
@@ -223,6 +255,21 @@ export default function AccountModal({
                           </InputAdornment>
                         ),
                       }}
+                    />
+                  </Grid>
+                  <Grid item sm={12} md={6} lg={4}>
+                    <FormControlLabel
+                      control={
+                        <Field
+                          fullWidth
+                          component={Switch}
+                          id="payed"
+                          name="payed"
+                          type="checkbox"
+                          helperText="Commentaar"
+                        />
+                      }
+                      label="Betaald?"
                     />
                   </Grid>
                 </Grid>

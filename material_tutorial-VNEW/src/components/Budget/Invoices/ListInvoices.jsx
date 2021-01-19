@@ -30,6 +30,7 @@ import {
   getComparator,
 } from "../../UI_Utils/SortingHelpers";
 import InvoiceModal from "./InvoiceModal";
+import MessageBox from "../../UI_Utils/MessageBox";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -199,6 +200,7 @@ export default function ListInvoices() {
   const [initialValues, setInitialValues] = useState({
     accountnr: "",
     amount: 0,
+    userid: 0, // currentUser.uid,
     comments: "",
     structuredmessage: "",
     datereceived: "",
@@ -261,10 +263,36 @@ export default function ListInvoices() {
     alert(id);
   };
 
+  /**
+   * Show the delete messagebox
+   */
+  const handleShowMessageBox = (id) => {
+    setIdToWorkOn(id);
+    setShowDeleteInvoiceMessageBox(true);
+  };
+
+  /**
+   * Close the Delete messagebox
+   */
+  const handleMessageBoxClose = () => {
+    setShowDeleteInvoiceMessageBox(false);
+  };
+
+  /**
+   * Show messagebox for deletion
+   * @param {id of the record to delete} id
+   */
+  const handleMessageBoxYes = (id) => {
+    // deleteInvoice();
+    setIdToWorkOn(0);
+    setShowDeleteInvoiceMessageBox(false);
+  };
+
   const handleNewInvoice = () => {
     setInitialValues({
       accountnr: "",
       amount: 0,
+      userid: currentUser.uid,
       comments: "",
       structuredmessage: "",
       datereceived: "",
@@ -355,7 +383,7 @@ export default function ListInvoices() {
                           <IconButton
                             className={classes.actionButtonDelete}
                             size={dense ? "small" : "medium"}
-                            onClick={() => handleEdit(row.id)}
+                            onClick={() => handleShowMessageBox(row.id)}
                           >
                             <DeleteForeverIcon />
                           </IconButton>
@@ -391,6 +419,13 @@ export default function ListInvoices() {
         initialValues={initialValues}
         setOpen={setShowNewInvoiceModal}
         idToWorkOn={idToWorkOn}
+      />
+      <MessageBox
+        open={showDeleteInvoiceMessageBox}
+        messageTitle="Faktuur verwijderen?"
+        messageSubTitle="Bent u zeker dat deze faktuur weg mag? Deze actie kan niet ongedaan gemaakt worden!"
+        handleMessageBoxClose={handleMessageBoxClose}
+        handleMessageBoxYes={handleMessageBoxYes}
       />
     </main>
   );

@@ -13,6 +13,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
+import DoneIcon from "@material-ui/icons/Done";
+import CancelIcon from "@material-ui/icons/CancelOutlined";
+
 import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -56,10 +59,19 @@ export default function MessageBox({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleMessageBoxClose} color="primary" autofocus>
+          <Button
+            onClick={handleMessageBoxClose}
+            endIcon={<CancelIcon />}
+            color="primary"
+            autofocus
+          >
             Neen
           </Button>
-          <Button onClick={handleMessageBoxYes} color="secondary">
+          <Button
+            onClick={handleMessageBoxYes}
+            endIcon={<DoneIcon />}
+            color="secondary"
+          >
             Ok
           </Button>
         </DialogActions>

@@ -1,6 +1,6 @@
 import React from "react";
 import SaveIcon from "@material-ui/icons/Save";
-import ClearIcon from "@material-ui/icons/Clear";
+import CancelIcon from "@material-ui/icons/CancelOutlined";
 import {
   Button,
   Grid,
@@ -106,13 +106,16 @@ export default function InvoiceModal({
       // No idToWokOn, so this is a new record
       db.collection("invoices")
         .add({
-          owner: values.accountOwnerName,
-          accountnr: values.accountNr,
-          date_created: CurrentISODate(),
-          userid: values.userid,
-          bank: values.accountBankName,
-          balance: values.accountCurrentBalance,
-          comments: values.accountComment,
+          accountnr: values.accountnr,
+          amount: values.amount,
+          comments: values.comments,
+          structuredmessage: values.structuredmessage,
+          datereceived: values.datereceived,
+          datetopay: values.datetopay,
+          inputdate: CurrentISODate(),
+          payed: values.payed,
+          sender: values.sender,
+          user: values.userid,
         })
         .then(() => {
           // Clear the form fields
@@ -288,7 +291,7 @@ export default function InvoiceModal({
               <DialogActions>
                 <Button
                   onClick={handleClose}
-                  endIcon={<ClearIcon />}
+                  endIcon={<CancelIcon />}
                   color="secondary"
                 >
                   Annuleren

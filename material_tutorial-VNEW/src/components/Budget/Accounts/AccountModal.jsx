@@ -14,7 +14,7 @@ import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import SaveIcon from "@material-ui/icons/Save";
-import ClearIcon from "@material-ui/icons/Clear";
+import CancelIcon from "@material-ui/icons/CancelOutlined";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -236,7 +236,7 @@ export default function AccountModal({
               <DialogActions>
                 <Button
                   onClick={handleClose}
-                  endIcon={<ClearIcon />}
+                  endIcon={<CancelIcon />}
                   color="secondary"
                 >
                   Annuleren

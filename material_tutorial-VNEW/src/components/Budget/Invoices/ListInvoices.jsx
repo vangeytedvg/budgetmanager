@@ -21,6 +21,8 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
+import DoneIcon from "@material-ui/icons/Done";
+import NotInterestedIcon from "@material-ui/icons/NotInterested";
 import { CurrentISODate } from "../../../utils";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
@@ -56,7 +58,7 @@ const headCells = [
     disablePadding: false,
     label: "Betalen vòòr",
   },
-  { id: "amount", numeric: true, disablePadding: false, label: "Bedrag" },
+  { id: "amount", numeric: true, disablePadding: false, label: "Bedrag (€)" },
   { id: "payed", numeric: false, disablePadding: false, label: "Betaald?" },
   {
     id: "accountnr",
@@ -129,6 +131,14 @@ const EnhancedTableHead = (props) => {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+  },
+  done: {
+    color: "green",
+    cursor: "pointer",
+  },
+  notdone: {
+    color: "red",
+    cursor: "pointer",
   },
   toolbar: theme.mixins.toolbar,
   paper: {
@@ -257,10 +267,25 @@ export default function ListInvoices() {
   };
 
   const handleEdit = (id) => {
-    setSelected(id);
+    // Get the current invoice from the existing array
+    // thus avoiding a roundtrip to firebase
+    console.log("THE ID", id);
     let currentInvoice = rows.filter((row) => row.id === id);
-    console.log(currentInvoice);
-    alert(id);
+    setInitialValues({
+      accountnr: currentInvoice[0].accountnr,
+      amount: currentInvoice[0].amount,
+      userid: currentInvoice[0].user,
+      comments: currentInvoice[0].comments,
+      structuredmessage: currentInvoice[0].structuredmessage,
+      datereceived: currentInvoice[0].datereceived,
+      datetopay: currentInvoice[0].datetopay,
+      inputdate: CurrentISODate(),
+      payed: currentInvoice[0].payed,
+      sender: currentInvoice[0].sender,
+    });
+    console.log(initialValues);
+    setIdToWorkOn(id);
+    setShowNewInvoiceModal(true);
   };
 
   /**
@@ -282,10 +307,27 @@ export default function ListInvoices() {
    * Show messagebox for deletion
    * @param {id of the record to delete} id
    */
-  const handleMessageBoxYes = (id) => {
-    // deleteInvoice();
-    setIdToWorkOn(0);
+  const handleMessageBoxYes = () => {
+    deleteInvoice();
     setShowDeleteInvoiceMessageBox(false);
+  };
+
+  /**
+   * Delete selected record
+   * @param {*} id Document id
+   */
+  const deleteInvoice = () => {
+    db.collection("invoices")
+      .doc(idToWorkOn)
+      .delete()
+      .then(() => {
+        console.log("Done");
+        setIdToWorkOn(0);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIdToWorkOn(0);
+      });
   };
 
   const handleNewInvoice = () => {
@@ -303,6 +345,18 @@ export default function ListInvoices() {
     });
     setIdToWorkOn(0);
     setShowNewInvoiceModal(true);
+  };
+
+  const handlePayment = (id, payed) => {
+    db.collection("invoices")
+      .doc(id)
+      .update({ payed: payed })
+      .then(() => {
+        console.log("Done");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -351,12 +405,23 @@ export default function ListInvoices() {
                       <TableCell align="right">{row.datereceived}</TableCell>
                       <TableCell align="right">{row.datetopay}</TableCell>
                       <TableCell align="right">{row.amount}</TableCell>
-                      <TableCell align="left">
-                        {row.payed ? "Betaald" : "Niet betaald"}
+                      <TableCell align="center">
+                        {row.payed ? (
+                          <DoneIcon
+                            onClick={() => handlePayment(row.id, false)}
+                            className={classes.done}
+                          />
+                        ) : (
+                          <NotInterestedIcon
+                            onClick={() => handlePayment(row.id, true)}
+                            className={classes.notdone}
+                          />
+                        )}
+                        {/* {row.payed ? "Betaald" : "Niet betaald"} */}
                       </TableCell>
                       <TableCell align="right">{row.accountnr}</TableCell>
                       <TableCell align="right">
-                        {row.stucturedmessage}
+                        {row.structuredmessage}
                       </TableCell>
                       <TableCell align="left">{row.comments}</TableCell>
                       <TableCell align="center">

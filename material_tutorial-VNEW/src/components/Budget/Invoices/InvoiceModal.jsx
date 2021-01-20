@@ -5,15 +5,11 @@ import {
   Button,
   Grid,
   InputAdornment,
-  FormControl,
   FormControlLabel,
-  Input,
-  InputLabel,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  // DialogTitle,
 } from "@material-ui/core";
 import { DialogTitle } from "../../UI_Utils/DialogTitle";
 import { Switch, TextField } from "formik-material-ui";
@@ -46,6 +42,7 @@ export default function InvoiceModal({
   idToWorkOn,
 }) {
   toast.configure();
+  console.log(initialValues);
 
   /**
    * The Validation schema for this form
@@ -59,10 +56,10 @@ export default function InvoiceModal({
     datetopay: Yup.string()
       // Replace all non digits and check if the lenght is 14
       .required("Betaaldatum verplicht!"),
-    accountr: Yup.string().required("Rekening nr verplicht"),
+    accountnr: Yup.string().required("Rekening nr verplicht"),
     structuredmessage: Yup.string().notRequired(),
     comments: Yup.string().notRequired(),
-    payed: Yup.string().notRequired(),
+    payed: Yup.bool().notRequired(),
   });
 
   /**
@@ -103,7 +100,6 @@ export default function InvoiceModal({
         });
     }
     if (!idToWorkOn) {
-      // No idToWokOn, so this is a new record
       db.collection("invoices")
         .add({
           accountnr: values.accountnr,
@@ -113,7 +109,7 @@ export default function InvoiceModal({
           datereceived: values.datereceived,
           datetopay: values.datetopay,
           inputdate: CurrentISODate(),
-          payed: values.payed,
+          // payed: values.payed,
           sender: values.sender,
           user: values.userid,
         })
@@ -258,8 +254,8 @@ export default function InvoiceModal({
                     <Field
                       fullWidth
                       component={TextField}
-                      id="accountComment"
-                      name="accountComment"
+                      id="comments"
+                      name="comments"
                       type="text"
                       helperText="Commentaar"
                       InputProps={{
@@ -271,13 +267,14 @@ export default function InvoiceModal({
                       }}
                     />
                   </Grid>
-                  <Grid item sm={12} md={6} lg={4}>
+                  {/* <Grid item sm={12} md={6} lg={4}>
                     <FormControlLabel
+                    SWITCH was outcommented because there is a bug in the implementation,
+                    found not solution on the internet (dd 20/01/2021)
                       control={
                         <Field
                           fullWidth
                           component={Switch}
-                          id="payed"
                           name="payed"
                           type="checkbox"
                           helperText="Commentaar"
@@ -285,7 +282,7 @@ export default function InvoiceModal({
                       }
                       label="Betaald?"
                     />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </DialogContent>
               <DialogActions>

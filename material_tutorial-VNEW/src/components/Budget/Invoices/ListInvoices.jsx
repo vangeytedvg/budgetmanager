@@ -133,11 +133,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   done: {
-    color: "green",
+    color: "yellow",
     cursor: "pointer",
   },
   notdone: {
-    color: "red",
+    color: "#e44d4d",
     cursor: "pointer",
   },
   toolbar: theme.mixins.toolbar,

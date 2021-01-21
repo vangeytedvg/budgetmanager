@@ -42,7 +42,6 @@ export default function InvoiceModal({
   idToWorkOn,
 }) {
   toast.configure();
-  console.log(initialValues);
 
   /**
    * The Validation schema for this form

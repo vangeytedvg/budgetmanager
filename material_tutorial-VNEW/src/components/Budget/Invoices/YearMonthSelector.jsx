@@ -51,12 +51,6 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
   }
   yearArr.reverse();
 
-  useEffect(() => {
-    const today = getQueryDateObject(CurrentISODate());
-    setMonth(today.month);
-    setYear(today.year);
-  }, [setMonth, setYear]);
-
   const handleChangeMonth = (event) => {
     setMonth(event.target.value);
   };

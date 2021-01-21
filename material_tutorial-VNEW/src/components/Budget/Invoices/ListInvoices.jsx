@@ -215,10 +215,6 @@ export default function ListInvoices() {
   const [rows, setRows] = useState([]);
   const { currentUser } = useAuth();
   const [idToWorkOn, setIdToWorkOn] = useState(0);
-
-  const [month, setMonth] = useState(0);
-  const [year, setYear] = useState(0);
-
   const [initialValues, setInitialValues] = useState({
     accountnr: "",
     amount: 0,
@@ -236,6 +232,10 @@ export default function ListInvoices() {
     showDeleteInvoiceMessageBox,
     setShowDeleteInvoiceMessageBox,
   ] = useState(false);
+  const [month, setMonth] = useState(
+    getQueryDateObject(CurrentISODate()).month
+  );
+  const [year, setYear] = useState(getQueryDateObject(CurrentISODate()).year);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -395,15 +395,16 @@ export default function ListInvoices() {
     let myDate = currentInvoice.datereceived;
   };
 
+  const today = getQueryDateObject(CurrentISODate());
+
   const handleChangeDates = (a, b) => {
     alert(a, b);
   };
 
   useEffect(() => {
     getInvoices();
-    // Avoid eslint error:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    console.log(month, year);
+  }, [month, year]);
 
   return (
     <main className={classes.content}>
@@ -419,6 +420,7 @@ export default function ListInvoices() {
         >
           Nieuwe faktuur
         </Button>
+        {isLoading && <CircularProgress className={classes.circleSpacer} />}
         <YearMonthSelector
           month={month}
           setMonth={setMonth}
@@ -426,7 +428,6 @@ export default function ListInvoices() {
           setYear={setYear}
         />
         <TableContainer>
-          {isLoading && <CircularProgress className={classes.circleSpacer} />}
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"

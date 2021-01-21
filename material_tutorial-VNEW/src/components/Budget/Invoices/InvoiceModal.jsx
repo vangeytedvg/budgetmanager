@@ -5,14 +5,14 @@ import {
   Button,
   Grid,
   InputAdornment,
-  FormControlLabel,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
 } from "@material-ui/core";
+import { getQueryDateObject } from "../../../utils";
 import { DialogTitle } from "../../UI_Utils/DialogTitle";
-import { Switch, TextField } from "formik-material-ui";
+import { TextField } from "formik-material-ui";
 import IbanField from "../../UI_Utils/IbanField";
 import {
   AccountCircle,
@@ -56,19 +56,21 @@ export default function InvoiceModal({
     datetopay: Yup.string()
       // Replace all non digits and check if the lenght is 14
       .required("Betaaldatum verplicht!"),
-    accountnr: Yup.string().required("Rekening nr verplicht"),
+    accountnr: Yup.string().notRequired(),
     structuredmessage: Yup.string().notRequired(),
     comments: Yup.string().notRequired(),
     payed: Yup.bool().notRequired(),
   });
 
   /**
-   * Form submission
+   * Form submission, create or edit an invoice
    * @param {} values
    */
   const onSubmit = (values, { resetForm }) => {
-    // If we have an idToWorkOn value, then this is an update
+    const dateObject = getQueryDateObject(values.datereceived);
+
     if (idToWorkOn) {
+      // We are updating an existing invoice
       db.collection("invoices")
         .doc(idToWorkOn)
         .update({
@@ -77,8 +79,10 @@ export default function InvoiceModal({
           comments: values.comments,
           structuredmessage: values.structuredmessage,
           datereceived: values.datereceived,
+          year_received: dateObject.year,
+          month_received: dateObject.month,
           datetopay: values.datetopay,
-          inputdate: CurrentISODate(),
+          // inputdate: CurrentISODate(),
           payed: false,
           sender: values.sender,
         })
@@ -99,7 +103,9 @@ export default function InvoiceModal({
           });
         });
     }
+
     if (!idToWorkOn) {
+      // No id, so this is a new invoice
       db.collection("invoices")
         .add({
           accountnr: values.accountnr,
@@ -107,6 +113,8 @@ export default function InvoiceModal({
           comments: values.comments,
           structuredmessage: values.structuredmessage,
           datereceived: values.datereceived,
+          year_received: dateObject.year,
+          month_received: dateObject.month,
           datetopay: values.datetopay,
           inputdate: CurrentISODate(),
           // payed: values.payed,

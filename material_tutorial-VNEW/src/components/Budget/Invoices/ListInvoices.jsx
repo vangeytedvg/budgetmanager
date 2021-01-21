@@ -23,7 +23,11 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
 import DoneIcon from "@material-ui/icons/Done";
 import NotInterestedIcon from "@material-ui/icons/NotInterested";
-import { CurrentISODate } from "../../../utils";
+import {
+  CurrentISODate,
+  getActualMonth,
+  getQueryDateObject,
+} from "../../../utils";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import SectionTitle from "../../UI_Utils/SectionTitle";
@@ -33,6 +37,8 @@ import {
 } from "../../UI_Utils/SortingHelpers";
 import InvoiceModal from "./InvoiceModal";
 import MessageBox from "../../UI_Utils/MessageBox";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -70,7 +76,7 @@ const headCells = [
     id: "structuredmessage",
     numeric: false,
     disablePadding: false,
-    label: "Gestructureerde mededeling",
+    label: "Mededeling faktuur",
   },
   {
     id: "comments",
@@ -196,6 +202,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export default function ListInvoices() {
+  toast.configure();
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -253,7 +260,7 @@ export default function ListInvoices() {
   const getInvoices = async () => {
     setIsLoading(true);
     db.collection("invoices")
-      .orderBy("inputdate", "asc")
+      .orderBy("datereceived", "desc")
       .orderBy("sender")
       .where("user", "==", currentUser.uid)
       .onSnapshot((querySnapshot) => {
@@ -321,12 +328,20 @@ export default function ListInvoices() {
       .doc(idToWorkOn)
       .delete()
       .then(() => {
-        console.log("Done");
         setIdToWorkOn(0);
+        return toast("Faktuur verwijderd!", {
+          position: toast.POSITION.TOP_CENTER,
+          type: "success",
+          autoClose: 3000,
+        });
       })
       .catch((err) => {
-        console.log(err);
         setIdToWorkOn(0);
+        return toast(err, {
+          position: toast.POSITION.TOP_CENTER,
+          type: "error",
+          autoClose: 10000,
+        });
       });
   };
 
@@ -347,16 +362,35 @@ export default function ListInvoices() {
     setShowNewInvoiceModal(true);
   };
 
+  /**
+   * Mark the invoice as payed when the user clicks on the
+   * payment status button
+   */
   const handlePayment = (id, payed) => {
     db.collection("invoices")
       .doc(id)
       .update({ payed: payed })
       .then(() => {
-        console.log("Done");
+        return toast("Faktuur betaling aangepast", {
+          position: toast.POSITION.TOP_CENTER,
+          type: "success",
+          autoClose: 3000,
+        });
       })
       .catch((err) => {
-        console.log(err);
+        return toast(err, {
+          position: toast.POSITION.TOP_CENTER,
+          type: "error",
+          autoClose: 10000,
+        });
       });
+  };
+
+  const testHandle = (id) => {
+    let currentInvoice = rows.find((row) => row.id === id);
+    let myDate = currentInvoice.datereceived;
+    console.log("Kwak", getActualMonth(myDate));
+    console.log(getQueryDateObject(myDate));
   };
 
   useEffect(() => {
@@ -400,7 +434,12 @@ export default function ListInvoices() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <StyledTableRow hover tabIndex={-1} key={row.id}>
+                    <StyledTableRow
+                      onClick={() => testHandle(row.id)}
+                      hover
+                      tabIndex={-1}
+                      key={row.id}
+                    >
                       <TableCell align="left">{row.sender}</TableCell>
                       <TableCell align="right">{row.datereceived}</TableCell>
                       <TableCell align="right">{row.datetopay}</TableCell>

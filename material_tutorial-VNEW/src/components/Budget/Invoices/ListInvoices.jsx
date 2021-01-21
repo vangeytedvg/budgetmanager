@@ -139,6 +139,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  circleSpacer: {
+    color: "blue",
+  },
   done: {
     color: "yellow",
     cursor: "pointer",
@@ -181,6 +184,7 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginBottom: "10px",
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -412,7 +416,11 @@ export default function ListInvoices() {
           Nieuwe faktuur
         </Button>
         {isLoading && (
-          <CircularProgress size={25} className={classes.circleSpacer} />
+          <CircularProgress
+            size={25}
+            variant="indeterminate"
+            className={classes.circleSpacer}
+          />
         )}
         <YearMonthSelector
           month={month}

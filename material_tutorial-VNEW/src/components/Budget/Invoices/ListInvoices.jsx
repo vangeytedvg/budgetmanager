@@ -39,6 +39,7 @@ import InvoiceModal from "./InvoiceModal";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import YearMonthSelector from "./YearMonthSelector";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -276,7 +277,7 @@ export default function ListInvoices() {
   const handleEdit = (id) => {
     // Get the current invoice from the existing array
     // thus avoiding a roundtrip to firebase
-    console.log("THE ID", id);
+
     let currentInvoice = rows.filter((row) => row.id === id);
     setInitialValues({
       accountnr: currentInvoice[0].accountnr,
@@ -290,7 +291,6 @@ export default function ListInvoices() {
       payed: currentInvoice[0].payed,
       sender: currentInvoice[0].sender,
     });
-    console.log(initialValues);
     setIdToWorkOn(id);
     setShowNewInvoiceModal(true);
   };
@@ -389,8 +389,6 @@ export default function ListInvoices() {
   const testHandle = (id) => {
     let currentInvoice = rows.find((row) => row.id === id);
     let myDate = currentInvoice.datereceived;
-    console.log("Kwak", getActualMonth(myDate));
-    console.log(getQueryDateObject(myDate));
   };
 
   useEffect(() => {
@@ -403,16 +401,17 @@ export default function ListInvoices() {
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <SectionTitle maintitle="Fakturen" subtitle="ingave en overzicht" />
-      <Button
-        className={classes.button}
-        variant="contained"
-        color="primary"
-        onClick={handleNewInvoice}
-        endIcon={<AddBoxOutlinedIcon />}
-      >
-        Nieuwe faktuur
-      </Button>
       <Paper className={classes.paper} elevation={6}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={handleNewInvoice}
+          endIcon={<AddBoxOutlinedIcon />}
+        >
+          Nieuwe faktuur
+        </Button>
+        <YearMonthSelector />
         <TableContainer>
           {isLoading && <CircularProgress className={classes.circleSpacer} />}
           <Table

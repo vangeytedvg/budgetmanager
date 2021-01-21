@@ -9,7 +9,8 @@ import {
   getActualMonth,
   getQueryDateObject,
 } from "../../../utils";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
+import TodayIcon from "@material-ui/icons/Today";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -21,6 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     backgroundColor: "#1f5a13",
+  },
+  menubar: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -61,32 +71,49 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
 
   return (
     <div className={classes.container}>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Maand</InputLabel>
-        <Select
-          labelId="month"
-          id="month"
-          value={month}
-          onChange={handleChangeMonth}
-        >
-          {monthNames.map((zen) => (
-            <MenuItem value={zen.id}>{zen.name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Jaar</InputLabel>
-        <Select
-          labelId="year"
-          id="year"
-          value={year}
-          onChange={handleChangeYear}
-        >
-          {yearArr.map((zen) => (
-            <MenuItem value={zen}>{zen}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Grid container className={classes.menubar}>
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Maand</InputLabel>
+            <Select
+              labelId="month"
+              id="month"
+              value={month}
+              onChange={handleChangeMonth}
+            >
+              {monthNames.map((zen) => (
+                <MenuItem value={zen.id}>{zen.name}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Jaar</InputLabel>
+            <Select
+              labelId="year"
+              id="year"
+              value={year}
+              onChange={handleChangeYear}
+            >
+              {yearArr.map((zen) => (
+                <MenuItem value={zen}>{zen}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        {/* <Grid item>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            endIcon={<TodayIcon />}
+            onClick={handleSelectCurrent}
+          >
+            Huidige maand en jaar
+          </Button>
+        </Grid> */}
+      </Grid>
     </div>
   );
 };

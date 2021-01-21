@@ -268,6 +268,8 @@ export default function ListInvoices() {
       .orderBy("datereceived", "desc")
       .orderBy("sender")
       .where("user", "==", currentUser.uid)
+      .where("month_received", "==", month)
+      .where("year_received", "==", year)
       .onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
@@ -390,17 +392,6 @@ export default function ListInvoices() {
       });
   };
 
-  const testHandle = (id) => {
-    let currentInvoice = rows.find((row) => row.id === id);
-    let myDate = currentInvoice.datereceived;
-  };
-
-  const today = getQueryDateObject(CurrentISODate());
-
-  const handleChangeDates = (a, b) => {
-    alert(a, b);
-  };
-
   useEffect(() => {
     getInvoices();
     console.log(month, year);
@@ -420,7 +411,9 @@ export default function ListInvoices() {
         >
           Nieuwe faktuur
         </Button>
-        {isLoading && <CircularProgress className={classes.circleSpacer} />}
+        {isLoading && (
+          <CircularProgress size={25} className={classes.circleSpacer} />
+        )}
         <YearMonthSelector
           month={month}
           setMonth={setMonth}
@@ -447,12 +440,7 @@ export default function ListInvoices() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   return (
-                    <StyledTableRow
-                      onClick={() => testHandle(row.id)}
-                      hover
-                      tabIndex={-1}
-                      key={row.id}
-                    >
+                    <StyledTableRow hover tabIndex={-1} key={row.id}>
                       <TableCell align="left">{row.sender}</TableCell>
                       <TableCell align="right">{row.datereceived}</TableCell>
                       <TableCell align="right">{row.datetopay}</TableCell>

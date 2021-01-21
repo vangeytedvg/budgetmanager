@@ -215,6 +215,10 @@ export default function ListInvoices() {
   const [rows, setRows] = useState([]);
   const { currentUser } = useAuth();
   const [idToWorkOn, setIdToWorkOn] = useState(0);
+
+  const [month, setMonth] = useState(0);
+  const [year, setYear] = useState(0);
+
   const [initialValues, setInitialValues] = useState({
     accountnr: "",
     amount: 0,
@@ -391,6 +395,10 @@ export default function ListInvoices() {
     let myDate = currentInvoice.datereceived;
   };
 
+  const handleChangeDates = (a, b) => {
+    alert(a, b);
+  };
+
   useEffect(() => {
     getInvoices();
     // Avoid eslint error:
@@ -411,7 +419,12 @@ export default function ListInvoices() {
         >
           Nieuwe faktuur
         </Button>
-        <YearMonthSelector />
+        <YearMonthSelector
+          month={month}
+          setMonth={setMonth}
+          year={year}
+          setYear={setYear}
+        />
         <TableContainer>
           {isLoading && <CircularProgress className={classes.circleSpacer} />}
           <Table

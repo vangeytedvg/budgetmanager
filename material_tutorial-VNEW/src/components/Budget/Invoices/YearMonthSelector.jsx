@@ -9,6 +9,7 @@ import {
   getActualMonth,
   getQueryDateObject,
 } from "../../../utils";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -18,12 +19,13 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  container: {
+    backgroundColor: "#1f5a13",
+  },
 }));
 
-const YearMonthSelector = (setCurrentMonth, setCurrentYear) => {
+const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
   const classes = useStyles();
-  const [month, setMonth] = useState(0);
-  const [year, setYear] = useState(0);
 
   const monthNames = [
     { id: 1, name: "Januari" },
@@ -50,8 +52,10 @@ const YearMonthSelector = (setCurrentMonth, setCurrentYear) => {
   yearArr.reverse();
 
   useEffect(() => {
-    setMonth(getActualMonth(CurrentISODate()));
-  }, []);
+    const today = getQueryDateObject(CurrentISODate());
+    setMonth(today.month);
+    setYear(today.year);
+  }, [setMonth, setYear]);
 
   const handleChangeMonth = (event) => {
     setMonth(event.target.value);
@@ -62,7 +66,7 @@ const YearMonthSelector = (setCurrentMonth, setCurrentYear) => {
   };
 
   return (
-    <div>
+    <div className={classes.container}>
       <FormControl className={classes.formControl}>
         <InputLabel id="demo-simple-select-label">Maand</InputLabel>
         <Select

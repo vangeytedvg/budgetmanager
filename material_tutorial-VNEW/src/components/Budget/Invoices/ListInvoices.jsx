@@ -219,6 +219,7 @@ export default function ListInvoices() {
   const [rows, setRows] = useState([]);
   const { currentUser } = useAuth();
   const [idToWorkOn, setIdToWorkOn] = useState(0);
+
   const [initialValues, setInitialValues] = useState({
     accountnr: "",
     amount: 0,
@@ -268,20 +269,43 @@ export default function ListInvoices() {
    */
   const getInvoices = async () => {
     setIsLoading(true);
-    db.collection("invoices")
-      .orderBy("datereceived", "desc")
-      .orderBy("sender")
-      .where("user", "==", currentUser.uid)
-      .where("month_received", "==", month)
-      .where("year_received", "==", year)
-      .onSnapshot((querySnapshot) => {
-        const docs = [];
-        querySnapshot.forEach((doc) => {
-          docs.push({ ...doc.data(), id: doc.id });
+    console.log("In getInvoices", month);
+    /**
+     * This is a rather BIG hack, because the firebase engine does
+     * not support a wildcard query...
+     */
+    if (month === 0) {
+      // Month 0 (*) the month where clause is removed here
+      db.collection("invoices")
+        .orderBy("datereceived", "desc")
+        .orderBy("sender")
+        .where("user", "==", currentUser.uid)
+        .where("year_received", "==", year)
+        .onSnapshot((querySnapshot) => {
+          const docs = [];
+          querySnapshot.forEach((doc) => {
+            docs.push({ ...doc.data(), id: doc.id });
+          });
+          setRows(docs);
+          setIsLoading(false);
         });
-        setRows(docs);
-        setIsLoading(false);
-      });
+    } else if (month > 0) {
+      // Where clause includes month
+      db.collection("invoices")
+        .orderBy("datereceived", "desc")
+        .orderBy("sender")
+        .where("user", "==", currentUser.uid)
+        .where("month_received", "==", month)
+        .where("year_received", "==", year)
+        .onSnapshot((querySnapshot) => {
+          const docs = [];
+          querySnapshot.forEach((doc) => {
+            docs.push({ ...doc.data(), id: doc.id });
+          });
+          setRows(docs);
+          setIsLoading(false);
+        });
+    }
   };
 
   const handleEdit = (id) => {

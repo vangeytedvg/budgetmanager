@@ -70,25 +70,7 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <div className={classes.toolbar} />
-      {/* <video
-        autoPlay
-        loop
-        muted
-        style={{
-          position: "absolute",
-          width: "100%",
-          left: "50%",
-          top: "50%",
-          height: "100%",
-          objectFit: "cover",
-          transform: "translate(-50%, -50%)",
-          opacity: 0.18,
-          zIndex: "1",
-        }}
-      >
-        <source src={milkyway} type="video/mp4" />
-      </video> */}
+      <div className={classes.toolbar} />      
       <SectionTitle maintitle="Dashboard" subtitle="algemeen overzicht" />
       <Grid
         container

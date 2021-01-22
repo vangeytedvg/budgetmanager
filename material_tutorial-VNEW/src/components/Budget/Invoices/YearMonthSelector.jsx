@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import Typopgraphy from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import {
-  CurrentISODate,
-  getActualMonth,
-  getQueryDateObject,
-} from "../../../utils";
-import { Button, Grid } from "@material-ui/core";
+import { CurrentISODate, getQueryDateObject } from "../../../utils";
+import { Button, Grid, Typography } from "@material-ui/core";
 import TodayIcon from "@material-ui/icons/Today";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -38,6 +36,7 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
   const classes = useStyles();
 
   const monthNames = [
+    { id: 0, name: "*" },
     { id: 1, name: "Januari" },
     { id: 2, name: "Februari" },
     { id: 3, name: "Maart" },
@@ -71,7 +70,15 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
 
   return (
     <div className={classes.container}>
-      <Grid container className={classes.menubar}>
+      <Grid container className={classes.menubar} spacing={2}>
+        <Grid item>
+          <Typography variant="p">
+            Selecteer maand en jaar voor overzicht
+          </Typography>
+        </Grid>
+        <Grid item>
+          <ArrowForwardIcon />
+        </Grid>
         <Grid item>
           <FormControl className={classes.formControl}>
             <InputLabel id="demo-simple-select-label">Maand</InputLabel>

@@ -15,7 +15,7 @@ export const getActualMonth = (date) => {
 };
 
 /**
- * Return an object with the month and the year
+ * Return an object with the month and the year of the given date
  * @param {date} date
  */
 export const getQueryDateObject = (date) => {

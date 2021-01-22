@@ -24,6 +24,7 @@ import AccountModal from "./AccountModal";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import bg from "../../../images/globalbg.png";
 
 /**
  * Styling the component
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
     borderRadius: "15px",
+    backgroundImage: `url(${bg})`,
+    // filter: `blur(${"1px"})`,
   },
   accountOwnerName: {
     minWidth: "300px",
@@ -219,12 +222,12 @@ const ListAccounts = (props) => {
       {isLoading && <CircularProgress className={classes.circleSpacer} />}
       <Grid
         container
-        spacing={4}
+        spacing={2}
         className={`${classes.gridContainer} ${classes.gridMarginTop}`}
       >
         {accounts.map((account, key) => {
           return (
-            <Grid item xs={12} md={4} lg={4}>
+            <Grid item xs={12} md={6} lg={4}>
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>

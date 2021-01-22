@@ -15,6 +15,7 @@ import {
   Button,
   IconButton,
   CircularProgress,
+  Divider,
 } from "@material-ui/core";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { red } from "@material-ui/core/colors";
@@ -91,6 +92,7 @@ const Home = () => {
                 with the mussels, if you like.
               </Typography>
             </CardContent>
+            <Divider />
             <CardActions>
               <IconButton color="secondary">
                 <ArrowForwardIcon />
@@ -108,6 +110,7 @@ const Home = () => {
                 with the mussels, if you like.
               </Typography>
             </CardContent>
+            <Divider />
             <CardActions>
               <IconButton color="secondary">
                 <ArrowForwardIcon />
@@ -125,6 +128,7 @@ const Home = () => {
                 with the mussels, if you like.
               </Typography>
             </CardContent>
+            <Divider />
             <CardActions>
               <IconButton color="secondary">
                 <ArrowForwardIcon />

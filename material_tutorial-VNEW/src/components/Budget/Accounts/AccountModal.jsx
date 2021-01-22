@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid, Divider } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
 
 import Input from "@material-ui/core/Input";
@@ -147,6 +147,7 @@ export default function AccountModal({
                   ? "Bestaande rekening aanpassen"
                   : "Nieuwe rekening"}
               </DialogTitle>
+              <Divider />
               <DialogContent>
                 <DialogContentText>
                   Gegevens voor deze rekening
@@ -233,6 +234,7 @@ export default function AccountModal({
                   </Grid>
                 </Grid>
               </DialogContent>
+              <Divider />
               <DialogActions>
                 <Button
                   onClick={handleClose}

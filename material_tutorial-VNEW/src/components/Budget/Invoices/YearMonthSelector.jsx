@@ -72,12 +72,12 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
     <div className={classes.container}>
       <Grid container className={classes.menubar} spacing={2}>
         <Grid item>
-          <Typography variant="p">
+          <Typography variant="p" style={{ color: "#eeff00" }}>
             Selecteer maand en jaar voor overzicht
           </Typography>
         </Grid>
         <Grid item>
-          <ArrowForwardIcon />
+          <ArrowForwardIcon style={{ color: "#eeff00" }} />
         </Grid>
         <Grid item>
           <FormControl className={classes.formControl}>

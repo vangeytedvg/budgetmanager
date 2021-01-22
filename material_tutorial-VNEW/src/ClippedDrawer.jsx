@@ -6,6 +6,7 @@ import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
+import ToolTip from "@material-ui/core/Tooltip";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
@@ -184,16 +185,19 @@ const ClippedDrawer = (props) => {
     {
       text: "Dashboard",
       icon: <DashboardIcon />,
+      tooltip: "Dashboard scherm (snel overzicht)",
       linkto: () => history.push("/"),
     },
     {
       text: "Rekeningen",
       icon: <EuroIcon />,
+      tooltip: "Beheer Rekeningen",
       linkto: () => history.push("/accounts"),
     },
     {
       text: "Uitgaven",
       icon: <AccountBalanceWalletTwoToneIcon />,
+      tooltip: "Beheer uitgaven",
       linkto: () => history.push("/expenses"),
     },
     {
@@ -204,6 +208,7 @@ const ClippedDrawer = (props) => {
     {
       text: "Inkomsten",
       icon: <AccountBalanceIcon />,
+      tooltip: "Beheer Inkomsten",
       linkto: () => history.push("/income"),
     },
     {
@@ -219,15 +224,18 @@ const ClippedDrawer = (props) => {
     {
       text: "Fakturen",
       icon: <ReceiptIcon />,
+      tooltip: "Beheer Fakturen",
       linkto: () => history.push("/invoicesoverview"),
     },
     {
       text: "Betaalplannen",
       icon: <BusinessCenterIcon />,
+      tooltip: "Beheer Betaalplannen",
       linkto: () => history.push("/payplan"),
     },
     {
       text: "Agenda",
+      tooltip: "Beheer Agenda",
       icon: <DateRangeTwoToneIcon />,
       linkto: () => history.push("/agenda"),
     },
@@ -306,18 +314,20 @@ const ClippedDrawer = (props) => {
             {menuOptions.map((item, index) => {
               // Need to destructure here, otherwise react complains
               // that objects can not be a child of ....
-              const { text, icon, linkto } = item;
+              const { text, icon, linkto, tooltip } = item;
               return (
-                <ListItem
-                  // If no user logged in, no actions possible
-                  disabled={disbledButtons()}
-                  button
-                  onClick={linkto}
-                  key={text}
-                >
-                  <ListItemIcon>{icon}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
+                <ToolTip title={tooltip} placement="right" arrow>
+                  <ListItem
+                    // If no user logged in, no actions possible
+                    disabled={disbledButtons()}
+                    button
+                    onClick={linkto}
+                    key={text}
+                  >
+                    <ListItemIcon>{icon}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </ToolTip>
               );
             })}
           </List>

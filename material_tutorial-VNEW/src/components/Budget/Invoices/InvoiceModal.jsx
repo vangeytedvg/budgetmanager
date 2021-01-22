@@ -9,6 +9,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  Divider,
 } from "@material-ui/core";
 import { getQueryDateObject } from "../../../utils";
 import { DialogTitle } from "../../UI_Utils/DialogTitle";
@@ -164,6 +165,7 @@ export default function InvoiceModal({
               <DialogTitle id="customized-dialog-title" onClose={handleClose}>
                 {idToWorkOn ? "Bestaande faktuur aanpassen" : "Nieuwe faktuur"}
               </DialogTitle>
+              <Divider />
               <DialogContent>
                 <DialogContentText>
                   Gegevens voor deze faktuur
@@ -292,6 +294,7 @@ export default function InvoiceModal({
                   </Grid> */}
                 </Grid>
               </DialogContent>
+              <Divider />
               <DialogActions>
                 <Button
                   onClick={handleClose}

@@ -12,6 +12,7 @@ import {
   CardActions,
   IconButton,
   CircularProgress,
+  Divider,
 } from "@material-ui/core";
 import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
@@ -261,6 +262,7 @@ const ListAccounts = (props) => {
                     </Grid>
                   </Grid>
                 </CardContent>
+                <Divider />
                 <CardActions>
                   <Tooltip
                     title="Rekeningdetails aanpassen"

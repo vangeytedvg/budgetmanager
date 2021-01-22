@@ -17,6 +17,7 @@ import CountUp from "react-countup";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
+import MemoryIcon from "@material-ui/icons/Memory";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
 import AccountModal from "./AccountModal";
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
       width: "80%",
       margin: theme.spacing(1),
     },
+    borderRadius: "15px",
   },
   accountOwnerName: {
     minWidth: "300px",
@@ -229,17 +231,32 @@ const ListAccounts = (props) => {
                   <Typography color="secondary" variant="h7">
                     {account.comments}
                   </Typography>
-                  <Typography variant="h6">IBAN {account.accountnr}</Typography>
-                  <Typography className={classes.balance} variant="h4">
-                    <CountUp
-                      start={-1}
-                      end={account.balance}
-                      duration={1.5}
-                      decimals={2}
-                      separator=","
-                      prefix="€"
-                    />
-                  </Typography>
+                  <Grid container>
+                    <Grid container>
+                      <Grid item>
+                        <MemoryIcon
+                          style={{ fontSize: 40, color: "#72741d" }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6">
+                          IBAN {account.accountnr}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.balance} variant="h4">
+                        <CountUp
+                          start={-1}
+                          end={account.balance}
+                          duration={1.5}
+                          decimals={2}
+                          separator=","
+                          prefix="€"
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </CardContent>
                 <CardActions>
                   <Tooltip

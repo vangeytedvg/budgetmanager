@@ -19,6 +19,7 @@ import {
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { red } from "@material-ui/core/colors";
 import milkyway from "../images/flying.mp4";
+import bg from "../images/globalbg.png";
 /**
  * If not defined, the page will not show correctly
  */
@@ -27,9 +28,12 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
     minWidth: 200,
+    backgroundImage: `url(${bg})`,
+    borderRadius: "10px",
   },
   content: {
     flexGrow: 1,
+    maxHeight: "100%",
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
   },
@@ -70,7 +74,7 @@ const Home = () => {
 
   return (
     <div className={classes.content}>
-      <div className={classes.toolbar} />      
+      <div className={classes.toolbar} />
       <SectionTitle maintitle="Dashboard" subtitle="algemeen overzicht" />
       <Grid
         container

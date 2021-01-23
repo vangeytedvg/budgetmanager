@@ -31,6 +31,7 @@ import { getComparator } from "../../UI_Utils/SortingHelpers";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ExpensesModal from "./ExpensesModal";
 import YearMonthSelector from "../../UI_Utils/YearMonthSelector";
 
 function stableSort(array, comparator) {
@@ -191,10 +192,12 @@ export default function ListExpenses() {
 
   const [initialValues, setInitialValues] = useState({
     owner: "",
+    ownerId: "",
     date_created: "",
     location: "",
     comments: "",
     amount: 0,
+    date_expense: "",
     userid: 0, // currentUser.uid,
   });
 
@@ -275,16 +278,19 @@ export default function ListExpenses() {
   const handleEdit = (id) => {
     // Get the current expense from the existing array
     // thus avoiding a roundtrip to firebase
-
     let currentExpense = rows.filter((row) => row.id === id);
     setInitialValues({
-      owner: currentExpense.owner.owner,
-      date_created: currentExpense.date_created,
-      location: currentExpense.location,
-      comments: currentExpense.comments,
-      amount: currentExpense.amount,
+      owner: currentExpense[0].owner.owner,
+      ownerId: currentExpense[0].owner.userid,
+      accountId: currentExpense[0].owner.id,
+      date_created: currentExpense[0].date_created,
+      date_expense: currentExpense[0].date_expense,
+      location: currentExpense[0].location,
+      comments: currentExpense[0].comments,
+      amount: currentExpense[0].amount,
       userid: currentUser.uid,
     });
+    console.log(initialValues);
     setIdToWorkOn(id);
     setShowNewExpenseModal(true);
   };
@@ -341,8 +347,11 @@ export default function ListExpenses() {
 
   const handleNewExpense = () => {
     setInitialValues({
-      owner: {},
+      owner: "",
+      ownerId: "",
+      accountId: "",
       date_created: CurrentISODate(),
+      date_expense: "",
       location: "",
       comments: "",
       amount: 0,
@@ -462,12 +471,12 @@ export default function ListExpenses() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      {/* <InvoiceModal
-        open={showNewInvoiceModal}
+      <ExpensesModal
+        open={showNewExpenseModal}
         initialValues={initialValues}
-        setOpen={setShowNewInvoiceModal}
+        setOpen={setShowNewExpenseModal}
         idToWorkOn={idToWorkOn}
-      /> */}
+      />
       <MessageBox
         open={showDeleteExpenseMessageBox}
         messageTitle="Faktuur verwijderen?"

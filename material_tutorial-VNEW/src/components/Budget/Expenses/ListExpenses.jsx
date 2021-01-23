@@ -45,7 +45,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   { id: "owner", numeric: false, disablePadding: false, label: "Door" },
-  { id: "amount", numeric: false, disablePadding: false, label: "Bedrag" },
+  { id: "amount", numeric: false, disablePadding: false, label: "Bedrag (€)" },
   { id: "date_created", numeric: false, disablePadding: false, label: "Datum" },
   { id: "location", numeric: false, disablePadding: false, label: "Locatie" },
   {
@@ -53,6 +53,18 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Commentaar",
+  },
+  {
+    id: "ed",
+    numeric: false,
+    disablePadding: false,
+    label: "Edit",
+  },
+  {
+    id: "del",
+    numeric: false,
+    disablePadding: false,
+    label: "Wis",
   },
 ];
 
@@ -230,17 +242,16 @@ export default function ListExpenses() {
      */
     if (month === 0) {
       // Month 0 (*) the month where clause is removed here
-      console.log("Every month");
       db.collection("expenses")
         .orderBy("date_created", "desc")
         .where("userid", "==", currentUser.uid)
+        .where("year", "==", year)
         .onSnapshot((querySnapshot) => {
           const docs = [];
           querySnapshot.forEach((doc) => {
             docs.push({ ...doc.data(), id: doc.id });
           });
           setRows(docs);
-          console.log(docs);
           setIsLoading(false);
         });
     } else if (month > 0) {
@@ -395,9 +406,10 @@ export default function ListExpenses() {
                   return (
                     <StyledTableRow hover tabIndex={-1} key={row.id}>
                       <TableCell align="left">{row.owner.owner}</TableCell>
+                      <TableCell align="right">{row.amount}</TableCell>
                       <TableCell align="right">{row.date_created}</TableCell>
-                      <TableCell align="right">{row.location}</TableCell>
-                      <TableCell align="right">{row.comments}</TableCell>
+                      <TableCell align="left">{row.location}</TableCell>
+                      <TableCell align="left">{row.comments}</TableCell>
 
                       <TableCell align="center">
                         <Tooltip

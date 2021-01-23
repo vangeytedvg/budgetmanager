@@ -31,7 +31,7 @@ import { getComparator } from "../../UI_Utils/SortingHelpers";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import YearMonthSelector from "./YearMonthSelector";
+import YearMonthSelector from "../../UI_Utils/YearMonthSelector";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -44,50 +44,15 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "sender", numeric: false, disablePadding: false, label: "Afzender" },
-  {
-    id: "datereceived",
-    numeric: false,
-    disablePadding: false,
-    label: "Ontvangen op",
-  },
-  {
-    id: "datetopay",
-    numeric: false,
-    disablePadding: false,
-    label: "Betalen vòòr",
-  },
-  { id: "amount", numeric: true, disablePadding: false, label: "Bedrag (€)" },
-  { id: "payed", numeric: false, disablePadding: false, label: "Betaald?" },
-  {
-    id: "accountnr",
-    numeric: false,
-    disablePadding: false,
-    label: "Storten op rekening",
-  },
-  {
-    id: "structuredmessage",
-    numeric: false,
-    disablePadding: false,
-    label: "Mededeling faktuur",
-  },
+  { id: "owner", numeric: false, disablePadding: false, label: "Door" },
+  { id: "amount", numeric: false, disablePadding: false, label: "Bedrag" },
+  { id: "date_created", numeric: false, disablePadding: false, label: "Datum" },
+  { id: "location", numeric: false, disablePadding: false, label: "Locatie" },
   {
     id: "comments",
     numeric: false,
     disablePadding: false,
-    label: "Kommentaar",
-  },
-  {
-    id: "ed",
-    numeric: false,
-    disablePadding: false,
-    label: "Edit",
-  },
-  {
-    id: "del",
-    numeric: false,
-    disablePadding: false,
-    label: "Wis",
+    label: "Commentaar",
   },
 ];
 
@@ -213,21 +178,18 @@ export default function ListExpenses() {
   const [idToWorkOn, setIdToWorkOn] = useState(0);
 
   const [initialValues, setInitialValues] = useState({
-    accountnr: "",
+    owner: "",
+    date_created: "",
+    location: "",
+    comments: "",
     amount: 0,
     userid: 0, // currentUser.uid,
-    comments: "",
-    structuredmessage: "",
-    datereceived: "",
-    datetopay: "",
-    inputdate: CurrentISODate(),
-    payed: false,
-    sender: "",
   });
+
   const [showNewExpenseModal, setShowNewExpenseModal] = useState(false);
   const [
     showDeleteExpenseMessageBox,
-    setShowDeleteInvoiceMessageBox,
+    setShowDeleteExpenseMessageBox,
   ] = useState(false);
   const [month, setMonth] = useState(
     getQueryDateObject(CurrentISODate()).month
@@ -259,36 +221,35 @@ export default function ListExpenses() {
   /**
    * Get the todos collection on a per user base
    */
-  const getInvoices = async () => {
+  const getExpenses = async () => {
     setIsLoading(true);
-    console.log("In getInvoices", month);
+    console.log("In getExpenses", month);
     /**
      * This is a rather BIG hack, because the firebase engine does
      * not support a wildcard query...
      */
     if (month === 0) {
       // Month 0 (*) the month where clause is removed here
-      db.collection("invoices")
-        .orderBy("datereceived", "desc")
-        .orderBy("sender")
-        .where("user", "==", currentUser.uid)
-        .where("year_received", "==", year)
+      console.log("Every month");
+      db.collection("expenses")
+        .orderBy("date_created", "desc")
+        .where("userid", "==", currentUser.uid)
         .onSnapshot((querySnapshot) => {
           const docs = [];
           querySnapshot.forEach((doc) => {
             docs.push({ ...doc.data(), id: doc.id });
           });
           setRows(docs);
+          console.log(docs);
           setIsLoading(false);
         });
     } else if (month > 0) {
       // Where clause includes month
-      db.collection("invoices")
-        .orderBy("datereceived", "desc")
-        .orderBy("sender")
-        .where("user", "==", currentUser.uid)
-        .where("month_received", "==", month)
-        .where("year_received", "==", year)
+      db.collection("expenses")
+        .orderBy("date_created", "desc")
+        .where("userid", "==", currentUser.uid)
+        .where("month", "==", month)
+        .where("year", "==", year)
         .onSnapshot((querySnapshot) => {
           const docs = [];
           querySnapshot.forEach((doc) => {
@@ -301,24 +262,20 @@ export default function ListExpenses() {
   };
 
   const handleEdit = (id) => {
-    // Get the current invoice from the existing array
+    // Get the current expense from the existing array
     // thus avoiding a roundtrip to firebase
 
-    let currentInvoice = rows.filter((row) => row.id === id);
+    let currentExpense = rows.filter((row) => row.id === id);
     setInitialValues({
-      accountnr: currentInvoice[0].accountnr,
-      amount: currentInvoice[0].amount,
-      userid: currentInvoice[0].user,
-      comments: currentInvoice[0].comments,
-      structuredmessage: currentInvoice[0].structuredmessage,
-      datereceived: currentInvoice[0].datereceived,
-      datetopay: currentInvoice[0].datetopay,
-      inputdate: CurrentISODate(),
-      payed: currentInvoice[0].payed,
-      sender: currentInvoice[0].sender,
+      owner: currentExpense.owner.owner,
+      date_created: currentExpense.date_created,
+      location: currentExpense.location,
+      comments: currentExpense.comments,
+      amount: currentExpense.amount,
+      userid: currentUser.uid,
     });
     setIdToWorkOn(id);
-    setShowNewInvoiceModal(true);
+    setShowNewExpenseModal(true);
   };
 
   /**
@@ -326,14 +283,14 @@ export default function ListExpenses() {
    */
   const handleShowMessageBox = (id) => {
     setIdToWorkOn(id);
-    setShowDeleteInvoiceMessageBox(true);
+    setShowDeleteExpenseMessageBox(true);
   };
 
   /**
    * Close the Delete messagebox
    */
   const handleMessageBoxClose = () => {
-    setShowDeleteInvoiceMessageBox(false);
+    setShowDeleteExpenseMessageBox(false);
   };
 
   /**
@@ -341,21 +298,21 @@ export default function ListExpenses() {
    * @param {id of the record to delete} id
    */
   const handleMessageBoxYes = () => {
-    deleteInvoice();
-    setShowDeleteInvoiceMessageBox(false);
+    deleteExpense();
+    setShowDeleteExpenseMessageBox(false);
   };
 
   /**
    * Delete selected record
    * @param {*} id Document id
    */
-  const deleteInvoice = () => {
-    db.collection("invoices")
+  const deleteExpense = () => {
+    db.collection("expenses")
       .doc(idToWorkOn)
       .delete()
       .then(() => {
         setIdToWorkOn(0);
-        return toast("Faktuur verwijderd!", {
+        return toast("Uitgave verwijderd!", {
           position: toast.POSITION.TOP_CENTER,
           type: "success",
           autoClose: 3000,
@@ -371,65 +328,37 @@ export default function ListExpenses() {
       });
   };
 
-  const handleNewInvoice = () => {
+  const handleNewExpense = () => {
     setInitialValues({
-      accountnr: "",
+      owner: {},
+      date_created: CurrentISODate(),
+      location: "",
+      comments: "",
       amount: 0,
       userid: currentUser.uid,
-      comments: "",
-      structuredmessage: "",
-      datereceived: "",
-      datetopay: "",
-      inputdate: CurrentISODate(),
-      payed: false,
-      sender: "",
     });
     setIdToWorkOn(0);
-    setShowNewInvoiceModal(true);
-  };
-
-  /**
-   * Mark the invoice as payed when the user clicks on the
-   * payment status button
-   */
-  const handlePayment = (id, payed) => {
-    db.collection("invoices")
-      .doc(id)
-      .update({ payed: payed })
-      .then(() => {
-        return toast("Faktuur betaling aangepast", {
-          position: toast.POSITION.TOP_CENTER,
-          type: "success",
-          autoClose: 3000,
-        });
-      })
-      .catch((err) => {
-        return toast(err, {
-          position: toast.POSITION.TOP_CENTER,
-          type: "error",
-          autoClose: 10000,
-        });
-      });
+    setShowNewExpenseModal(true);
   };
 
   useEffect(() => {
-    getInvoices();
-    console.log(month, year);
+    getExpenses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [month, year]);
 
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
-      <SectionTitle maintitle="Fakturen" subtitle="ingave en overzicht" />
+      <SectionTitle maintitle="Uitgaven" subtitle="beheer" />
       <Paper className={classes.paper} elevation={6}>
         <Button
           className={classes.button}
           variant="contained"
           color="primary"
-          onClick={handleNewInvoice}
+          onClick={handleNewExpense}
           endIcon={<AddBoxOutlinedIcon />}
         >
-          Nieuwe faktuur
+          Nieuwe uitgave
         </Button>
         {isLoading && (
           <CircularProgress
@@ -465,32 +394,14 @@ export default function ListExpenses() {
                 .map((row, index) => {
                   return (
                     <StyledTableRow hover tabIndex={-1} key={row.id}>
-                      <TableCell align="left">{row.sender}</TableCell>
-                      <TableCell align="right">{row.datereceived}</TableCell>
-                      <TableCell align="right">{row.datetopay}</TableCell>
-                      <TableCell align="right">{row.amount}</TableCell>
-                      <TableCell align="center">
-                        {row.payed ? (
-                          <DoneIcon
-                            onClick={() => handlePayment(row.id, false)}
-                            className={classes.done}
-                          />
-                        ) : (
-                          <NotInterestedIcon
-                            onClick={() => handlePayment(row.id, true)}
-                            className={classes.notdone}
-                          />
-                        )}
-                        {/* {row.payed ? "Betaald" : "Niet betaald"} */}
-                      </TableCell>
-                      <TableCell align="right">{row.accountnr}</TableCell>
-                      <TableCell align="right">
-                        {row.structuredmessage}
-                      </TableCell>
-                      <TableCell align="left">{row.comments}</TableCell>
+                      <TableCell align="left">{row.owner.owner}</TableCell>
+                      <TableCell align="right">{row.date_created}</TableCell>
+                      <TableCell align="right">{row.location}</TableCell>
+                      <TableCell align="right">{row.comments}</TableCell>
+
                       <TableCell align="center">
                         <Tooltip
-                          title="Faktuur aanpassen"
+                          title="Uitgave aanpassen"
                           placement="bottom"
                           arrow
                         >
@@ -504,11 +415,7 @@ export default function ListExpenses() {
                         </Tooltip>
                       </TableCell>
                       <TableCell align="center">
-                        <Tooltip
-                          title="Faktuur wissen"
-                          placement="bottom"
-                          arrow
-                        >
+                        <Tooltip title="Uigave wissen" placement="bottom" arrow>
                           <IconButton
                             className={classes.actionButtonDelete}
                             size={dense ? "small" : "medium"}

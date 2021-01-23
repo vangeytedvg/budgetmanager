@@ -316,7 +316,11 @@ const ClippedDrawer = (props) => {
               // that objects can not be a child of ....
               const { text, icon, linkto, tooltip } = item;
               return (
-                <ToolTip title={tooltip} placement="right" arrow>
+                <ToolTip
+                  title={tooltip ? tooltip : "none"}
+                  placement="right"
+                  arrow
+                >
                   <ListItem
                     // If no user logged in, no actions possible
                     disabled={disbledButtons()}

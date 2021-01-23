@@ -232,7 +232,7 @@ const ListAccounts = (props) => {
               <Card className={classes.root} raised>
                 <CardHeader title={account.owner} subheader={account.bank} />
                 <CardContent>
-                  <Typography color="secondary" variant="h7">
+                  <Typography color="secondary" variant="h6">
                     {account.comments}
                   </Typography>
                   <Grid container>

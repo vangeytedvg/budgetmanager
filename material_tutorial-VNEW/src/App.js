@@ -12,11 +12,10 @@ import About from "./components/About";
 import { makeStyles } from "@material-ui/core/styles";
 import Contact from "./components/Contact";
 import Income from "./components/Budget/Income/Income";
-import Expenses from "./components/Budget/Expenses/Expenses";
+import ListExpenses from "./components/Budget/Expenses/ListExpenses";
 import IncomeOverview from "./components/Budget/Income/IncomeOverview";
 import ExpensesOverview from "./components/Budget/Expenses/ExpensesOverview";
 import Invoices from "./components/Budget/Invoices/Invoices";
-import InvoicesOverview from "./components/Budget/Invoices/InvoicesOverview";
 import PaymentPlans from "./components/Budget/PaymentPlans/PaymentPlans";
 import Agenda from "./components/Agenda/Agenda";
 import Accounts from "./components/Budget/Accounts/Accounts";
@@ -68,7 +67,7 @@ function App() {
           <Switch>
             <PrivateRoute exact path="/" component={Home} />
             <PrivateRoute path="/accounts" component={ListAccounts} />
-            <PrivateRoute path="/expenses" component={Expenses} />
+            <PrivateRoute path="/expenses" component={ListExpenses} />
             <PrivateRoute path="/income" component={Income} />
             <PrivateRoute path="/incomeoverview" component={IncomeOverview} />
             <PrivateRoute

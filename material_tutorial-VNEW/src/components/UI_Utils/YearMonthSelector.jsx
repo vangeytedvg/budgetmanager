@@ -5,7 +5,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typopgraphy from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { CurrentISODate, getQueryDateObject } from "../../../utils";
+import { CurrentISODate, getQueryDateObject } from "../../utils";
 import { Button, Grid, Typography } from "@material-ui/core";
 import TodayIcon from "@material-ui/icons/Today";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";

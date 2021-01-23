@@ -39,7 +39,7 @@ import InvoiceModal from "./InvoiceModal";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import YearMonthSelector from "./YearMonthSelector";
+import YearMonthSelector from "../../UI_Utils/YearMonthSelector";
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);

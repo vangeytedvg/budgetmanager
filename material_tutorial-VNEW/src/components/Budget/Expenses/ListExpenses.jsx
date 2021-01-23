@@ -366,6 +366,7 @@ export default function ListExpenses() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [month, year]);
 
+
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />

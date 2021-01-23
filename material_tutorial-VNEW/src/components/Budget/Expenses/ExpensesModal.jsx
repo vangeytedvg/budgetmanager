@@ -1,3 +1,10 @@
+/**
+ * ExpensesModal.jsx
+ * Created : 23/01/2021
+ * Author  : DVG
+ *
+ */
+
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Divider } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
@@ -122,6 +129,8 @@ export default function ExpensesModal({
     }
     handleClose();
   };
+
+  // TODO: Add a select control for selecting the account
 
   const handleClose = () => {
     setOpen(false);

@@ -200,22 +200,23 @@ const ClippedDrawer = (props) => {
       tooltip: "Beheer uitgaven",
       linkto: () => history.push("/expenses"),
     },
-    {
-      text: "Overzicht uitgaven",
-      icon: <ListAltTwoToneIcon />,
-      linkto: () => history.push("/expenseoverview"),
-    },
+    // },
+    // {
+    //   text: "Overzicht uitgaven",
+    //   icon: <ListAltTwoToneIcon />,
+    //   linkto: () => history.push("/expenseoverview"),
+    // },
     {
       text: "Inkomsten",
       icon: <AccountBalanceIcon />,
       tooltip: "Beheer Inkomsten",
       linkto: () => history.push("/income"),
     },
-    {
-      text: "Overzicht inkomsten",
-      icon: <ViewListTwoToneIcon />,
-      linkto: () => history.push("/incomeoverview"),
-    },
+    // {
+    //   text: "Overzicht inkomsten",
+    //   icon: <ViewListTwoToneIcon />,
+    //   linkto: () => history.push("/incomeoverview"),
+    // },
     // {
     //   text: "Fakturen",
     //   icon: <DescriptionTwoToneIcon />,

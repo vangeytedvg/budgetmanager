@@ -54,6 +54,7 @@ export default function ExpensesModal({
     getQueryDateObject(CurrentISODate()).month
   );
   const [year, setYear] = useState(getQueryDateObject(CurrentISODate()).year);
+
   /**
    * The Validation schema for this form
    */
@@ -72,10 +73,48 @@ export default function ExpensesModal({
    * Update the account information after an expense was entered
    */
   const updateAccount = (accountid, amount) => {
-    // Because we made an expense, debit the selected account
-    let accUser = accounts.filter((acc) => acc.id === accountid);
-    let newAmount = accUser[0].balance - amount;
-    db.collection("accounts").doc(accountid).update("balance", newAmount);
+    /**
+     * Accountancy Rule:
+     *  ex orginal amount = 10, do an expense of 5 (debet)
+     *  amount - debet = new amount.  New amount is saved.
+     *  In case of edit.
+     *    original new amount = 5 (from previous 10-5),
+     *    corrected to 3.
+     *      new amount = 5 - 3 = 2
+     *      result = 2.
+     *      Correct to  = 5 + 2 = 7
+     *  7 Is the new amount on the accouont
+     *  Save 7 to correct original input
+     * Short:
+     *  edit = (amount - debet) = rest
+     *  nev value = (amount + rest)
+     */
+    const account = accounts.filter((acc) => acc.id === accountid);
+    // if (amount > account[0].balance) {
+    //   console.log("NGAT", amount, account[0].balance);
+    // } else if (amount < account[0].balance) {
+    //   console.log("OGAT", amount, account[0].balance);
+    // }
+    const diff = account[0].balance - amount;
+    // console.log(account[0].balance);
+    // console.log(amount);
+    // console.log("DIF ", diff);
+    // edit we need to do some accountancy!
+    if (idToWorkOn) {
+      // console.log(
+      //   "Difference :",
+      //   diff,
+      //   "Corrected",
+      //   diff + initialValues.amount
+      // );
+      const correctedAmount = diff + initialValues.amount;
+      // console.log(correctedAmount);
+      db.collection("accounts")
+        .doc(accountid)
+        .update("balance", correctedAmount);
+    } else {
+      db.collection("accounts").doc(accountid).update("balance", diff);
+    }
   };
 
   /**
@@ -132,6 +171,7 @@ export default function ExpensesModal({
         })
         .then(() => {
           // Clear the form fields
+          updateAccount(values.accountid, values.amount);
           resetForm({ values: "" });
           return toast("Uitgave opgeslagen!", {
             position: toast.POSITION.TOP_CENTER,

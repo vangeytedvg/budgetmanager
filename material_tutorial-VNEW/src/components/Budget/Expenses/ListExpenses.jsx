@@ -322,29 +322,74 @@ export default function ListExpenses() {
   };
 
   /**
+   * Get the expense doc to be edited
+   * @param {*} id
+   */
+  async function onAskToEdit(id) {
+    // Fetch the record with the expense id
+    const snapshot = await db.collection("expenses").doc(id).get();
+    const data = snapshot.data();
+    return data;
+  }
+
+  /**
+   * Update the account and set the amount plus the recovery of the expense
+   * @param {*} id
+   * @param {*} amount
+   */
+  async function onUpdateAccount(id, amount) {
+    const snapshot = await db.collection("accounts").doc(id).get();
+    let oldAmount = snapshot.data();
+    // console.log(oldAmount);
+    // console.log("OLD AMOUNT", oldAmount.balance);
+    let newAmount = oldAmount.balance + amount;
+    // console.log(newAmount)
+    db.collection("accounts")
+      .doc(id)
+      .update("balance", newAmount)
+      .catch((err) => {
+        return toast("Error during update balance", {
+          position: toast.POSITION.TOP_CENTER,
+          type: "error",
+          autoClose: 5000,
+        });
+      });
+  }
+
+  /**
    * Delete selected record
    * @param {*} id Document id
    */
   const deleteExpense = () => {
-    db.collection("expenses")
-      .doc(idToWorkOn)
-      .delete()
-      .then(() => {
-        setIdToWorkOn(0);
-        return toast("Uitgave verwijderd!", {
-          position: toast.POSITION.TOP_CENTER,
-          type: "success",
-          autoClose: 3000,
-        });
-      })
-      .catch((err) => {
-        setIdToWorkOn(0);
-        return toast(err, {
-          position: toast.POSITION.TOP_CENTER,
-          type: "error",
-          autoClose: 10000,
-        });
-      });
+    // Delete the expense
+    // First get the account
+    const originalExpense = onAskToEdit(idToWorkOn).then((t) => {
+      let accountId = t.owner.id;
+      let expenseAmount = t.amount;
+      // console.log("Account id", accountId, "Amount", expenseAmount);
+      const updateAccount = onUpdateAccount(accountId, expenseAmount).then(
+        () => {
+          // Finally delete the expense doc
+          db.collection("expenses")
+            .doc(idToWorkOn)
+            .delete()
+            .then(() => {
+              return toast("Record deleted, balance reset", {
+                position: toast.POSITION.BOTTOM_CENTER,
+                type: "info",
+                autoClose: 3000,
+              });
+            })
+            .catch((err) => {
+              return toast("Error", {
+                position: toast.POSITION.BOTTOM_CENTER,
+                type: "warning",
+                autoClose: 3000,
+              });
+            });
+        }
+      );
+    });
   };
 
   const handleNewExpense = () => {
@@ -481,8 +526,8 @@ export default function ListExpenses() {
       />
       <MessageBox
         open={showDeleteExpenseMessageBox}
-        messageTitle="Faktuur verwijderen?"
-        messageSubTitle="Bent u zeker dat deze faktuur weg mag? Deze actie kan niet ongedaan gemaakt worden!"
+        messageTitle="Uitgave verwijderen?"
+        messageSubTitle="Bent u zeker dat deze uitgave weg mag? Deze actie kan niet ongedaan gemaakt worden!.  De balans wordt gecorrigeerd."
         handleMessageBoxClose={handleMessageBoxClose}
         handleMessageBoxYes={handleMessageBoxYes}
       />

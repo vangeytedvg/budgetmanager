@@ -90,23 +90,8 @@ export default function ExpensesModal({
      *  nev value = (amount + rest)
      */
     const account = accounts.filter((acc) => acc.id === accountid);
-    // if (amount > account[0].balance) {
-    //   console.log("NGAT", amount, account[0].balance);
-    // } else if (amount < account[0].balance) {
-    //   console.log("OGAT", amount, account[0].balance);
-    // }
     const diff = account[0].balance - amount;
-    // console.log(account[0].balance);
-    // console.log(amount);
-    // console.log("DIF ", diff);
-    // edit we need to do some accountancy!
     if (idToWorkOn) {
-      // console.log(
-      //   "Difference :",
-      //   diff,
-      //   "Corrected",
-      //   diff + initialValues.amount
-      // );
       const correctedAmount = diff + initialValues.amount;
       // console.log(correctedAmount);
       db.collection("accounts")

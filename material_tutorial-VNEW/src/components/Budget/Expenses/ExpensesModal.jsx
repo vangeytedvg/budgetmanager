@@ -8,10 +8,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Grid, Divider } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
-
+import { Select } from "formik-material-ui";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
 import * as Yup from "yup";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
@@ -33,7 +34,7 @@ import { DialogTitle } from "../../UI_Utils/DialogTitle";
 import { Field, Form, Formik } from "formik";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CurrentISODate } from "../../../utils";
+import { CurrentISODate, getQueryDateObject } from "../../../utils";
 import Zoom from "@material-ui/core/Zoom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -49,11 +50,16 @@ export default function ExpensesModal({
   toast.configure();
   const { currentUser } = useAuth();
   const [accounts, setAccounts] = useState([]);
+  const [month, setMonth] = useState(
+    getQueryDateObject(CurrentISODate()).month
+  );
+  const [year, setYear] = useState(getQueryDateObject(CurrentISODate()).year);
   /**
    * The Validation schema for this form
    */
   const validationSchema = Yup.object({
     accountid: Yup.string().required("Required!"),
+    date_expense: Yup.string().required("Datum uitgave is verplicht!"),
     ownername: Yup.string().notRequired(),
     comments: Yup.string().required("Geef uitleg over de uitgave"),
     location: Yup.string().required("Geef de plaats van de uitgave"),
@@ -61,6 +67,16 @@ export default function ExpensesModal({
       .min(1, "Uitgavebedrag kan niet nul zijn!")
       .required("Verplicht veld"),
   });
+
+  /**
+   * Update the account information after an expense was entered
+   */
+  const updateAccount = (accountid, amount) => {
+    // Because we made an expense, debit the selected account
+    let accUser = accounts.filter((acc) => acc.id === accountid);
+    let newAmount = accUser[0].balance - amount;
+    db.collection("accounts").doc(accountid).update("balance", newAmount);
+  };
 
   /**
    * Form submission
@@ -82,6 +98,7 @@ export default function ExpensesModal({
           date_expense: values.date_expense,
         })
         .then(() => {
+          updateAccount(values.accountid, values.amount);
           resetForm({ values: "" });
           return toast("Gegevens aangepast!", {
             position: toast.POSITION.TOP_CENTER,
@@ -99,7 +116,8 @@ export default function ExpensesModal({
         });
     }
     if (!idToWorkOn) {
-      // No idToWokOn, so this is a new record
+      // No idToWokOn, so this is a new record, year and month are set
+      // here.
       db.collection("expenses")
         .add({
           owner: accUser[0],
@@ -108,11 +126,14 @@ export default function ExpensesModal({
           comments: values.comments,
           location: values.location,
           date_expense: values.date_expense,
+          date_created: CurrentISODate(),
+          month: month,
+          year: year,
         })
         .then(() => {
           // Clear the form fields
           resetForm({ values: "" });
-          return toast("Nieuwe rekening aangemaakt!", {
+          return toast("Uitgave opgeslagen!", {
             position: toast.POSITION.TOP_CENTER,
             type: "success",
             autoClose: 3000,
@@ -130,14 +151,16 @@ export default function ExpensesModal({
     handleClose();
   };
 
-  // TODO: Add a select control for selecting the account
-
+  /**
+   * Set flag for closing the modal
+   */
   const handleClose = () => {
     setOpen(false);
   };
 
   /**
-   * Get the accounts collection for the current user
+   * Get the accounts collection for the current user, this
+   * data is used to operate on the account data afterwards
    */
   const getAccounts = async () => {
     db.collection("accounts")
@@ -183,18 +206,36 @@ export default function ExpensesModal({
                 <DialogContentText>Details van de uitgave</DialogContentText>
                 <Grid container spacing={2}>
                   <Grid item sm={12} md={4} lg={6}>
+                    <FormControl>
+                      <InputLabel shrink htmlFor="accountid">
+                        Rekening:
+                      </InputLabel>
+                      <Field
+                        component={Select}
+                        name="accountid"
+                        InputProps={{
+                          id: "accountid",
+                        }}
+                      >
+                        {accounts.map((account) => {
+                          return (
+                            <MenuItem key={account.id} value={account.id}>
+                              {account.owner} {account.comments}
+                            </MenuItem>
+                          );
+                        })}
+                      </Field>
+                    </FormControl>
+                  </Grid>
+                  <Grid item sm={12} md={4} lg={6}></Grid>
+                  <Grid item sm={12} md={4} lg={6}>
                     <Field
+                      fullWidth
                       component={TextField}
-                      id="accountid"
-                      name="accountid"
-                      helperText="Rekening waarmee uitgave is gedaan"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AccountCircle />
-                          </InputAdornment>
-                        ),
-                      }}
+                      id="date_expense"
+                      name="date_expense"
+                      helperText="Datum uitgave"
+                      type="date"
                     />
                   </Grid>
                   <Grid item sm={12} md={4} lg={6}>

@@ -198,6 +198,7 @@ export default function ListExpenses() {
     comments: "",
     amount: 0,
     date_expense: "",
+    accountid: "",
     userid: 0, // currentUser.uid,
   });
 
@@ -259,6 +260,7 @@ export default function ListExpenses() {
         });
     } else if (month > 0) {
       // Where clause includes month
+      console.log(month, year);
       db.collection("expenses")
         .orderBy("date_created", "desc")
         .where("userid", "==", currentUser.uid)
@@ -282,7 +284,7 @@ export default function ListExpenses() {
     setInitialValues({
       owner: currentExpense[0].owner.owner,
       ownerId: currentExpense[0].owner.userid,
-      accountId: currentExpense[0].owner.id,
+      accountid: currentExpense[0].owner.id,
       date_created: currentExpense[0].date_created,
       date_expense: currentExpense[0].date_expense,
       location: currentExpense[0].location,
@@ -365,7 +367,6 @@ export default function ListExpenses() {
     getExpenses();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [month, year]);
-
 
   return (
     <main className={classes.content}>

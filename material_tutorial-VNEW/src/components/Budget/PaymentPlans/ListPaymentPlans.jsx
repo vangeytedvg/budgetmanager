@@ -240,7 +240,9 @@ const ListPaymentPlans = (props) => {
                   <Grid container>
                     <Grid container>
                       <Grid item>
-                        Totaal bedrag {plan.payplan_totalRequestAmount}
+                        <Typography variant="h6">
+                          Totaal bedrag €{plan.payplan_totalRequestAmount}
+                        </Typography>
                       </Grid>
                       <Grid item></Grid>
                     </Grid>

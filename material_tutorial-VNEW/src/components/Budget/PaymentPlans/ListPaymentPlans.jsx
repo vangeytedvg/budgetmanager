@@ -68,18 +68,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ListPaymentPlans = (props) => {
   // Accounts array for firebase
-  const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [accountOwner, setAccountOwner] = useState("");
-  const [accountNr, setAccountNr] = useState("");
-  const [bank, setBank] = useState("");
-  const [balance, setBalance] = useState(0);
   const [idToWorkOn, setIdToWorkOn] = useState(0);
-  const [showNewInvoiceModal, setShowNewInvoiceModal] = useState(false);
-  const [
-    showDeleteAccountMessageBox,
-    setShowDeleteAccountMessageBox,
-  ] = useState(false);
+  const [showNewPlanModal, setShowNewPlanModal] = useState(false);
+  const [plans, setPlans] = useState([]);
+  const [showDeletePlanMessageBox, setShowDeletePlanMessageBox] = useState(
+    false
+  );
 
   const [initialValues, setInitialValues] = useState({
     date_created: CurrentISODate(),
@@ -102,14 +97,14 @@ const ListPaymentPlans = (props) => {
    */
   const handleShowMessageBox = (id) => {
     setIdToWorkOn(id);
-    setShowDeleteAccountMessageBox(true);
+    setShowDeletePlanMessageBox(true);
   };
 
   /**
    * Close the Delete messagebox
    */
   const handleMessageBoxClose = () => {
-    setShowDeleteAccountMessageBox(false);
+    setShowDeletePlanMessageBox(false);
   };
 
   /**
@@ -119,7 +114,7 @@ const ListPaymentPlans = (props) => {
   const handleMessageBoxYes = (id) => {
     deleteAccount();
     setIdToWorkOn(0);
-    setShowDeleteAccountMessageBox(false);
+    setShowDeletePlanMessageBox(false);
   };
 
   const classes = useStyles();
@@ -138,26 +133,26 @@ const ListPaymentPlans = (props) => {
       payplan_comment: "",
     });
     setIdToWorkOn(0);
-    setShowNewInvoiceModal(true);
+    setShowNewPlanModal(true);
   };
 
   const handleEditAccount = (id) => {
     // Not needed to go to firestore again, we have the data already,
     // so filter it out from the accounts array
-    let currentAccount = accounts.filter((accounts) => accounts.id === id);
-
     setInitialValues({
-      date_created: CurrentISODate(),
       userid: currentUser.uid,
-      accountOwnerName: currentAccount[0].owner,
-      accountNr: currentAccount[0].accountnr,
-      accountBankName: currentAccount[0].bank,
-      accountCurrentBalance: currentAccount[0].balance,
-      accountComment: currentAccount[0].comments,
+      accountid: "",
+      payplan_origin: "",
+      payplan_accountNr: "",
+      payplan_structMessage: "",
+      payplan_totalRequestAmount: "",
+      payplan_payAmount: "",
+      payplan_day: "",
+      payplan_comment: "",
     });
 
     setIdToWorkOn(id);
-    setShowNewInvoiceModal(true);
+    setShowNewPlanModal(true);
   };
 
   /**
@@ -190,14 +185,12 @@ const ListPaymentPlans = (props) => {
     setIsLoading(true);
     db.collection("payplans")
       .where("userid", "==", currentUser.uid)
-      .orderBy("owner")
-      .orderBy("bank")
       .onSnapshot((querySnapshot) => {
         const docs = [];
         querySnapshot.forEach((doc) => {
           docs.push({ ...doc.data(), id: doc.id });
         });
-        setAccounts(docs);
+        setPlans(docs);
       });
     setIsLoading(false);
   };
@@ -232,18 +225,23 @@ const ListPaymentPlans = (props) => {
         spacing={2}
         className={`${classes.gridContainer} ${classes.gridMarginTop}`}
       >
-        {accounts.map((account, key) => {
+        {plans.map((plan, key) => {
           return (
             <Grid item xs={12} md={6} lg={4} key={key}>
               <Card className={classes.root} raised>
-                <CardHeader title={account.owner} subheader={account.bank} />
+                <CardHeader
+                  title={plan.payplan_origin}
+                  subheader={plan.payplan_day}
+                />
                 <CardContent>
                   <Typography color="secondary" variant="h6">
-                    {account.comments}
+                    {plan.payplan_comment}
                   </Typography>
                   <Grid container>
                     <Grid container>
-                      <Grid item></Grid>
+                      <Grid item>
+                        Totaal bedrag {plan.payplan_totalRequestAmount}
+                      </Grid>
                       <Grid item></Grid>
                     </Grid>
                   </Grid>
@@ -256,7 +254,7 @@ const ListPaymentPlans = (props) => {
                     arrow
                   >
                     <IconButton
-                      onClick={() => handleEditAccount(account.id)}
+                      onClick={() => handleEditAccount(plan.id)}
                       color="primary"
                     >
                       <EditIcon />
@@ -264,7 +262,7 @@ const ListPaymentPlans = (props) => {
                   </Tooltip>
                   <Tooltip title="Rekening wissen" placement="top" arrow>
                     <IconButton
-                      onClick={() => handleShowMessageBox(account.id)}
+                      onClick={() => handleShowMessageBox(plans.id)}
                       color="primary"
                     >
                       <DeleteForeverIcon />
@@ -277,13 +275,13 @@ const ListPaymentPlans = (props) => {
         })}
       </Grid>
       <PayplanModal
-        open={showNewInvoiceModal}
+        open={showNewPlanModal}
         initialValues={initialValues}
-        setOpen={setShowNewInvoiceModal}
+        setOpen={setShowNewPlanModal}
         idToWorkOn={idToWorkOn}
       />
       <MessageBox
-        open={showDeleteAccountMessageBox}
+        open={showDeletePlanMessageBox}
         messageTitle="Betaalplan verwijderen?"
         messageSubTitle="Bent u zeker dat dit betaalplan weg mag? Deze actie kan niet ongedaan gemaakt worden!"
         handleMessageBoxClose={handleMessageBoxClose}

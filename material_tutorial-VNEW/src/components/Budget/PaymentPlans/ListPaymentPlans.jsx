@@ -21,11 +21,11 @@ import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
 import MemoryIcon from "@material-ui/icons/Memory";
 import { useAuth } from "../../../Context/AuthContext";
 import { db } from "../../../database/firebase";
-import AccountModal from "./AccountModal";
+import PayplanModal from "./PayplanModal";
 import MessageBox from "../../UI_Utils/MessageBox";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import bg from "../../../images/globalbg.png";
+import "react-toastify/dist/ReactToastify.css";
 
 /**
  * Styling the component
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListAccounts = (props) => {
+const ListPaymentPlans = (props) => {
   // Accounts array for firebase
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,7 +158,7 @@ const ListAccounts = (props) => {
    * Permanently delete the selected account nr
    */
   const deleteAccount = () => {
-    db.collection("accounts")
+    db.collection("paymentplans")
       .doc(idToWorkOn)
       .delete()
       .then(() => {
@@ -180,9 +180,9 @@ const ListAccounts = (props) => {
   /**
    * Get the accounts collection on a per user base
    */
-  const getAccounts = async () => {
+  const getPayplans = async () => {
     setIsLoading(true);
-    db.collection("accounts")
+    db.collection("payplans")
       .where("userid", "==", currentUser.uid)
       .orderBy("owner")
       .orderBy("bank")
@@ -201,14 +201,14 @@ const ListAccounts = (props) => {
    */
   useEffect(() => {
     // On page load get the accounts
-    getAccounts();
+    getPayplans();
   }, []);
 
   return (
     <div className={classes.content}>
       <div className={classes.toolbar} />
       <SectionTitle
-        maintitle="Lijst rekeningen"
+        maintitle="Betaalplannen"
         subtitle="algemeen overzicht en aanmaak"
       />
       <Button
@@ -218,7 +218,7 @@ const ListAccounts = (props) => {
         onClick={handleNewAccount}
         endIcon={<AddBoxOutlinedIcon />}
       >
-        Nieuwe rekening
+        Nieuw betaalplan
       </Button>
       {isLoading && <CircularProgress className={classes.circleSpacer} />}
       <Grid
@@ -290,7 +290,7 @@ const ListAccounts = (props) => {
           );
         })}
       </Grid>
-      <AccountModal
+      <PayplanModal
         open={showNewInvoiceModal}
         initialValues={initialValues}
         setOpen={setShowNewInvoiceModal}
@@ -298,8 +298,8 @@ const ListAccounts = (props) => {
       />
       <MessageBox
         open={showDeleteAccountMessageBox}
-        messageTitle="Rekening verwijderen?"
-        messageSubTitle="Bent u zeker dat deze rekening weg mag? Deze actie kan niet ongedaan gemaakt worden!"
+        messageTitle="Betaalplan verwijderen?"
+        messageSubTitle="Bent u zeker dat dit betaalplan weg mag? Deze actie kan niet ongedaan gemaakt worden!"
         handleMessageBoxClose={handleMessageBoxClose}
         handleMessageBoxYes={handleMessageBoxYes}
       />
@@ -307,4 +307,4 @@ const ListAccounts = (props) => {
   );
 };
 
-export default ListAccounts;
+export default ListPaymentPlans;

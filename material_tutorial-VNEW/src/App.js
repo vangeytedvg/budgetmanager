@@ -8,26 +8,26 @@ import { Route, Switch } from "react-router-dom";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import ClippedDrawer from "./ClippedDrawer";
 import Home from "./components/Home";
-import About from "./components/About";
+// import About from "./components/About";
 import { makeStyles } from "@material-ui/core/styles";
+import PrivateRoute from "./Context/PrivateRoute";
 import Contact from "./components/Contact";
 import Income from "./components/Budget/Income/Income";
 import ListExpenses from "./components/Budget/Expenses/ListExpenses";
 import IncomeOverview from "./components/Budget/Income/IncomeOverview";
-import ExpensesOverview from "./components/Budget/Expenses/ExpensesOverview";
+// import ExpensesOverview from "./components/Budget/Expenses/ExpensesOverview";
+import ListAccounts from "./components/Budget/Accounts/ListAccounts";
+import ListInvoices from "./components/Budget/Invoices/ListInvoices";
+import ListPaymentPlans from "./components/Budget/PaymentPlans/ListPaymentPlans";
 import Invoices from "./components/Budget/Invoices/Invoices";
-import PaymentPlans from "./components/Budget/PaymentPlans/PaymentPlans";
-import Agenda from "./components/Agenda/Agenda";
-import Accounts from "./components/Budget/Accounts/Accounts";
+// import Agenda from "./components/Agenda/Agenda";
+// import Accounts from "./components/Budget/Accounts/Accounts";
 import { colors } from "@material-ui/core";
 import Login from "./Context/Login";
 import Signup from "./Context/Signup";
-import ForgotPassword from "./Context/ForgotPassword";
-import UpdateProfile from "./Context/UpdateProfile";
+// import ForgotPassword from "./Context/ForgotPassword";
+// import UpdateProfile from "./Context/UpdateProfile";
 import { AuthProvider } from "./Context/AuthContext";
-import PrivateRoute from "./Context/PrivateRoute";
-import ListAccounts from "./components/Budget/Accounts/ListAccounts";
-import ListInvoices from "./components/Budget/Invoices/ListInvoices";
 
 const useStyles = makeStyles({
   container: {
@@ -70,13 +70,13 @@ function App() {
             <PrivateRoute path="/expenses" component={ListExpenses} />
             <PrivateRoute path="/income" component={Income} />
             <PrivateRoute path="/incomeoverview" component={IncomeOverview} />
-            <PrivateRoute
+            {/* <PrivateRoute
               path="/expenseoverview"
               component={ExpensesOverview}
-            />
+            /> */}
             <PrivateRoute path="/invoices" component={Invoices} />
             <PrivateRoute path="/invoicesoverview" component={ListInvoices} />
-            <PrivateRoute path="/payplan" component={PaymentPlans} />
+            <PrivateRoute path="/payplan" component={ListPaymentPlans} />
 
             <Route from="/login" render={(props) => <Login {...props} />} />
             <Route from="/signup" render={(props) => <Signup {...props} />} />

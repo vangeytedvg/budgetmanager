@@ -72,7 +72,7 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
     <div className={classes.container}>
       <Grid container className={classes.menubar} spacing={2}>
         <Grid item>
-          <Typography variant="p" style={{ color: "#eeff00" }}>
+          <Typography style={{ color: "#eeff00" }}>
             Selecteer maand en jaar voor overzicht
           </Typography>
         </Grid>
@@ -89,7 +89,9 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
               onChange={handleChangeMonth}
             >
               {monthNames.map((zen) => (
-                <MenuItem value={zen.id}>{zen.name}</MenuItem>
+                <MenuItem value={zen.id} key={zen.id}>
+                  {zen.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -103,8 +105,10 @@ const YearMonthSelector = ({ month, setMonth, year, setYear }) => {
               value={year}
               onChange={handleChangeYear}
             >
-              {yearArr.map((zen) => (
-                <MenuItem value={zen}>{zen}</MenuItem>
+              {yearArr.map((zen, key) => (
+                <MenuItem value={zen} key={key}>
+                  {zen}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

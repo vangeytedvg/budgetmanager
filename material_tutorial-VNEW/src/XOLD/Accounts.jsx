@@ -1,13 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import SectionTitle from "../../UI_Utils/SectionTitle";
+import SectionTitle from "../components/UI_Utils/SectionTitle";
 import { Button, Grid, Paper, TextField } from "@material-ui/core";
 import { useFormik } from "formik";
-import { CurrentISODate } from "../../../utils";
+import { CurrentISODate } from "../utils";
 import InputMask from "react-input-mask";
-import TextError from "../../UI_Utils/TextError";
-import ListAccounts from "./ListAccounts";
+import TextError from "../components/UI_Utils/TextError";
+import ListAccounts from "../components/Budget/Accounts/ListAccounts";
 
 /**
  * Styling

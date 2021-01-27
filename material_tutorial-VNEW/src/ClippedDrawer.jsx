@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { withRouter, useHistory } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -15,9 +15,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import AccountBalanceWalletTwoToneIcon from "@material-ui/icons/AccountBalanceWalletTwoTone";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
-import ViewListTwoToneIcon from "@material-ui/icons/ViewListTwoTone";
-import ListAltTwoToneIcon from "@material-ui/icons/ListAltTwoTone";
-import DescriptionTwoToneIcon from "@material-ui/icons/DescriptionTwoTone";
+// import ViewListTwoToneIcon from "@material-ui/icons/ViewListTwoTone";
+// import ListAltTwoToneIcon from "@material-ui/icons/ListAltTwoTone";
+// import DescriptionTwoToneIcon from "@material-ui/icons/DescriptionTwoTone";
 import EuroIcon from "@material-ui/icons/Euro";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DateRangeTwoToneIcon from "@material-ui/icons/DateRangeTwoTone";
@@ -321,13 +321,14 @@ const ClippedDrawer = (props) => {
                   title={tooltip ? tooltip : "none"}
                   placement="right"
                   arrow
+                  key={index}
                 >
                   <ListItem
                     // If no user logged in, no actions possible
                     disabled={disbledButtons()}
                     button
                     onClick={linkto}
-                    key={text}
+                    key={index}
                   >
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText primary={text} />

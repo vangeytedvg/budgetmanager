@@ -13,7 +13,7 @@ import {
 import { useAuth } from "../Context/AuthContext";
 import { Link, useHistory } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import { Alert } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   root: {

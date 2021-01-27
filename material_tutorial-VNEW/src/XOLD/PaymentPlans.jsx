@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import SectionTitle from "../../UI_Utils/SectionTitle";
+import SectionTitle from "../../../UI_Utils/SectionTitle";
 
 /**
  * If not defined, the page will not show correctly

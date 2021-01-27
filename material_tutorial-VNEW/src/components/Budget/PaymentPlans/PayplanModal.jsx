@@ -11,11 +11,13 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem";
 // import AccountCircle from "@material-ui/icons/AccountCircle";
 import EuroIcon from "@material-ui/icons/Euro";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+// import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import EventIcon from "@material-ui/icons/Event";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import RateReviewIcon from "@material-ui/icons/RateReview";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -216,7 +218,7 @@ export default function PayplanModal({
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <AccountBalanceIcon />
+                          <SupervisorAccountIcon />
                         </InputAdornment>
                       ),
                     }}
@@ -228,12 +230,28 @@ export default function PayplanModal({
                     component={TextField}
                     name="payplan_accountNr"
                     id="payplan_accountNr"
-                    helperText="Te storten op"
+                    helperText="Storten op rekening"
                     InputProps={{
                       inputComponent: IbanField,
                       startAdornment: (
                         <InputAdornment position="start">
                           <CreditCardIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item sm={12} md={4} lg={6}>
+                  <Field
+                    component={TextField}
+                    id="payplan_structMessage"
+                    name="payplan_structMessage"
+                    type="text"
+                    helperText="Mededeling op betaling"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <RateReviewIcon />
                         </InputAdornment>
                       ),
                     }}
@@ -258,14 +276,14 @@ export default function PayplanModal({
                 <Grid item sm={12} md={4} lg={6}>
                   <Field
                     component={TextField}
-                    id="payplan_paySlices"
-                    name="payplan_paySlices"
-                    type="text"
-                    helperText="Aantal aflossingen"
+                    id="payplan_payAmount"
+                    name="payplan_payAmount"
+                    type="number"
+                    helperText="Bedrag per aflossing"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <RateReviewIcon />
+                          <EuroIcon />
                         </InputAdornment>
                       ),
                     }}
@@ -274,14 +292,14 @@ export default function PayplanModal({
                 <Grid item sm={12} md={4} lg={6}>
                   <Field
                     component={TextField}
-                    id="payplan_payAmount"
-                    name="payplan_payAmount"
-                    type="text"
-                    helperText="Bedrag per aflossing"
+                    id="payplan_pay_day"
+                    name="payplan_pay_day"
+                    type="number"
+                    helperText="Dag betaling"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <EuroIcon />
+                          <EventIcon />
                         </InputAdornment>
                       ),
                     }}

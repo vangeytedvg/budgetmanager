@@ -84,11 +84,14 @@ const ListPaymentPlans = (props) => {
   const [initialValues, setInitialValues] = useState({
     date_created: CurrentISODate(),
     userid: 0, // currentUser.uid,
-    accountOwnerName: "",
-    accountNr: "",
-    accountBankName: "",
-    accountCurrentBalance: "",
-    accountComment: "",
+    accountid: "",
+    payplan_origin: "",
+    payplan_accountNr: "",
+    payplan_structMessage: "",
+    payplan_totalRequestAmount: "",
+    payplan_payAmount: "",
+    payplan_day: "",
+    payplan_comment: "",
   });
 
   // Get the current user
@@ -125,11 +128,14 @@ const ListPaymentPlans = (props) => {
     setInitialValues({
       date_created: CurrentISODate(),
       userid: currentUser.uid,
-      accountOwnerName: "",
-      accountNr: "",
-      accountBankName: "",
-      accountCurrentBalance: "",
-      accountComment: "",
+      accountid: "",
+      payplan_origin: "",
+      payplan_accountNr: "",
+      payplan_structMessage: "",
+      payplan_totalRequestAmount: "",
+      payplan_payAmount: "",
+      payplan_day: "",
+      payplan_comment: "",
     });
     setIdToWorkOn(0);
     setShowNewInvoiceModal(true);
@@ -237,28 +243,8 @@ const ListPaymentPlans = (props) => {
                   </Typography>
                   <Grid container>
                     <Grid container>
-                      <Grid item>
-                        <MemoryIcon
-                          style={{ fontSize: 40, color: "#72741d" }}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h6">
-                          IBAN {account.accountnr}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={classes.balance} variant="h4">
-                        <CountUp
-                          start={-1}
-                          end={account.balance}
-                          duration={1.5}
-                          decimals={2}
-                          separator=","
-                          prefix="€"
-                        />
-                      </Typography>
+                      <Grid item></Grid>
+                      <Grid item></Grid>
                     </Grid>
                   </Grid>
                 </CardContent>

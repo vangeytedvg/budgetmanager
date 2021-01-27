@@ -49,22 +49,23 @@ export default function PayplanModal({
   const { currentUser } = useAuth();
   toast.configure();
 
+  const days = [];
+  for (let i = 0; i <= 31; i++) {
+    days.push(i);
+  }
+
   /**
    * The Validation schema for this form
    */
   const validationSchema = Yup.object({
-    accountOwnerName: Yup.string()
-      .max(40, "Maximum 40")
-      .required("Naam is verplicht!"),
-    accountCurrentBalance: Yup.number()
-      .min(0, "Kan niet negatief zijn")
-      .required("Stand rekening verplicht"),
-    accountNr: Yup.string()
-      // Replace all non digits and check if the lenght is 14
-      .transform((value) => value.replace(/[^\d]/g, ""))
-      .min(14, "Geen correct rekening nummer")
-      .required("Rekening nummer verplicht"),
-    accountBankName: Yup.string().required("Naam van de bank verplicht"),
+    accountid: Yup.string().required("Verplicht veld"),
+    payplan_origin: Yup.string().required("Verplicht veld"),
+    payplan_accountNr: Yup.string().required("Verplicht veld"),
+    payplan_structMessage: Yup.string().notRequired(),
+    payplan_totalRequestAmount: Yup.number().required("verplicht veld"),
+    payplan_payAmount: Yup.number().required("Verplicht veld"),
+    payplan_day: Yup.number().required("Verplicht veld"),
+    payplan_comment: Yup.string().notRequired(),
   });
 
   /**
@@ -77,11 +78,14 @@ export default function PayplanModal({
       db.collection("payplans")
         .doc(idToWorkOn)
         .update({
-          owner: values.accountOwnerName,
-          accountnr: values.accountNr,
-          bank: values.accountBankName,
-          balance: values.accountCurrentBalance,
-          comments: values.accountComment,
+          accountid: values.accountid,
+          payplan_origin: values.payplan_origin,
+          payplan_accountNr: values.payplan_accountNr,
+          payplan_structMessage: values.payplan_structMessage,
+          payplan_totalRequestAmount: values.payplan_totalRequestAmount,
+          payplan_payAmount: values.payplan_payAmount,
+          payplan_day: values.payplan_day,
+          payplan_comment: values.payplan_comment,
         })
         .then(() => {
           resetForm({ values: "" });
@@ -102,20 +106,23 @@ export default function PayplanModal({
     }
     if (!idToWorkOn) {
       // No idToWokOn, so this is a new record
-      db.collection("accounts")
+      db.collection("payplans")
         .add({
-          owner: values.accountOwnerName,
-          accountnr: values.accountNr,
           date_created: CurrentISODate(),
-          userid: values.userid,
-          bank: values.accountBankName,
-          balance: values.accountCurrentBalance,
-          comments: values.accountComment,
+          userid: currentUser.uid,
+          accountid: values.accountid,
+          payplan_origin: values.payplan_origin,
+          payplan_accountNr: values.payplan_accountNr,
+          payplan_structMessage: values.payplan_structMessage,
+          payplan_totalRequestAmount: values.payplan_totalRequestAmount,
+          payplan_payAmount: values.payplan_payAmount,
+          payplan_day: values.payplan_day,
+          payplan_comment: values.payplan_comment,
         })
         .then(() => {
           // Clear the form fields
           resetForm({ values: "" });
-          return toast("Nieuwe rekening aangemaakt!", {
+          return toast("Nieuw betaalplan aangemaakt", {
             position: toast.POSITION.TOP_CENTER,
             type: "success",
             autoClose: 3000,
@@ -212,8 +219,8 @@ export default function PayplanModal({
                 <Grid item sm={12} md={4} lg={6}>
                   <Field
                     component={TextField}
-                    id="payplan_Origin"
-                    name="payplan_Origin"
+                    id="payplan_origin"
+                    name="payplan_origin"
                     helperText="Te betalen aan"
                     InputProps={{
                       startAdornment: (
@@ -290,26 +297,32 @@ export default function PayplanModal({
                   />
                 </Grid>
                 <Grid item sm={12} md={4} lg={6}>
-                  <Field
-                    component={TextField}
-                    id="payplan_pay_day"
-                    name="payplan_pay_day"
-                    type="number"
-                    helperText="Dag betaling"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <EventIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
+                  <FormControl>
+                    <InputLabel shrink htmlFor="accountid">
+                      Dag betaling
+                    </InputLabel>
+                    <Field
+                      component={Select}
+                      name="payplan_day"
+                      InputProps={{
+                        id: "payplan_day",
+                      }}
+                    >
+                      {days.map((day) => {
+                        return (
+                          <MenuItem key={day} value={day}>
+                            {day}
+                          </MenuItem>
+                        );
+                      })}
+                    </Field>
+                  </FormControl>
                 </Grid>
                 <Grid item sm={12} md={4} lg={6}>
                   <Field
                     component={TextField}
-                    id="payplan_Comment"
-                    name="payplan_Comment"
+                    id="payplan_comment"
+                    name="payplan_comment"
                     type="text"
                     helperText="Commentaar"
                     InputProps={{

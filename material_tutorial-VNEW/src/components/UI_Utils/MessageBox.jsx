@@ -15,8 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import WarningTwoToneIcon from "@material-ui/icons/WarningTwoTone";
 import DoneIcon from "@material-ui/icons/Done";
 import CancelIcon from "@material-ui/icons/CancelOutlined";
-
 import { Grid } from "@material-ui/core";
+import "./pp.css";
 
 const useStyles = makeStyles((theme) => ({
   messageSubTitle: {
@@ -44,6 +44,7 @@ export default function MessageBox({
           <Grid container>
             <Grid item>
               <WarningTwoToneIcon
+                className="spinner rotate"
                 style={{ fontSize: 40, marginRight: "8px", color: "#fffb00" }}
               />
             </Grid>
